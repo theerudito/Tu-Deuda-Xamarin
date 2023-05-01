@@ -265,8 +265,12 @@ namespace Tu_Deuda.ViewModel
             }
         }
 
+        #region COMMANDS
+
         public ICommand btnDelete => new Command(async () => await Delete_Credito());
         public ICommand btngoHome => new Command(async () => await Back_Home());
         public ICommand btnSave_Data => new Command(async () => await SaveData());
+
+        #endregion COMMANDS
     }
 }
