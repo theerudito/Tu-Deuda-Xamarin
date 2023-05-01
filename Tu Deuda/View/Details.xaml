@@ -1,0 +1,269 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Tu_Deuda.View.Details">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="Center">
+            <StackLayout>
+                <Grid
+                    RowDefinitions="*"
+                    ColumnDefinitions="30,*,30">
+                    <ImageButton
+                        Margin="10,0,0,0"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        HeightRequest="20"
+                        WidthRequest="20"
+                        BackgroundColor="Transparent"
+                        Source="back_black.png"
+                        Command="{Binding btngoHome}" />
+                    <ImageButton
+                        HeightRequest="20"
+                        WidthRequest="20"
+                        Aspect="AspectFit"
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Margin="-10,0,0,0"
+                        BackgroundColor="Transparent"
+                        Source="delete_red"
+                        Command="{Binding btnDelete}" />
+                </Grid>
+            </StackLayout>
+            <Grid
+                ColumnDefinitions="*"
+                RowDefinitions="80,20,20,50,50,*,50,*,50">
+                <StackLayout
+                    Grid.Row="0"
+                    Grid.Column="0">
+                    <Image
+                        WidthRequest="80"
+                        HeightRequest="80"
+                        Source="add_client.png" />
+                </StackLayout>
+
+                <StackLayout
+                    HorizontalOptions="Center"
+                    Grid.Row="1"
+                    Grid.Column="0">
+                    <Label Text="{Binding TextDate}" />
+                </StackLayout>
+
+                <StackLayout
+                    Grid.Row="2"
+                    Grid.Column="0">
+                    <Grid
+                        Margin="40,0,0,0"
+                        ColumnDefinitions="100,*,100,*"
+                        RowDefinitions="*">
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Text="Valor Anterior:" />
+                        <Label
+                            FontAttributes="Bold"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Text="{Binding TextValor}" />
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Text="Valor Actual:" />
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="3"
+                            FontAttributes="Bold"
+                            Text="{Binding TextAbono}" />
+                    </Grid>
+                </StackLayout>
+
+                <StackLayout
+                    Grid.Row="3"
+                    Grid.Column="0">
+                    <Grid
+                        ColumnDefinitions="*"
+                        RowDefinitions="*,*">
+                        <StackLayout
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Background="#2E3192">
+                            <Label
+                                Margin="0,2,0,0"
+                               TextColor="White"
+                               HorizontalOptions="Center"
+                               FontAttributes="Bold"
+                               Text="RESULTADO FINAL" />
+                        </StackLayout>
+
+                        <Label
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           Grid.Row="1"
+                           Grid.Column="0"
+                           TextColor="{Binding Color}"
+                           FontSize="20"
+                           Text="{Binding TextValorFinal}" />
+                    </Grid>
+                </StackLayout>
+
+                <StackLayout
+                    Grid.Row="4"
+                    Grid.Column="0">
+                    <Grid
+                        ColumnDefinitions="*"
+                        RowDefinitions="*,*">
+                        <StackLayout
+                            Background="#2E3192">
+                            <Label
+                                HorizontalOptions="Center"
+                                TextColor="White"
+                                Margin="5,0,0,0"
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                FontAttributes="Bold"
+                                Text="NOMBRE:" />
+                        </StackLayout>
+
+                        <Label
+                            FontAttributes="Bold"
+                            Margin="5,0,0,0"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Text="{Binding TextName}" />
+                    </Grid>
+                </StackLayout>
+
+                <StackLayout
+                    Grid.Row="5"
+                    Grid.Column="0">
+                    <Grid
+                        ColumnDefinitions="*"
+                        RowDefinitions="*,*,80">
+                        <StackLayout
+                            Background="#2E3192">
+                            <Label
+                                HorizontalOptions="Center"
+                                TextColor="White"
+                                Margin="5,0,0,0"
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                FontAttributes="Bold"
+                                Text="DESCRIPCION:" />
+                        </StackLayout>
+                        <ScrollView
+                            Grid.Row="1"
+                            Grid.Column="0">
+                            <Label
+                            Margin="5,0,0,5"
+                            Text="{Binding TextDescription}" />
+                        </ScrollView>
+
+                        <Frame
+                            BorderColor="Silver"
+                            HeightRequest="40"
+                            BackgroundColor="AliceBlue"
+                            CornerRadius="5"
+                            HasShadow="True"
+                            Margin="5,20,5,0"
+                            Padding="0,15,0,0"
+                            Grid.Row="2"
+                            Grid.Column="0">
+                            <Entry
+                                Placeholder="Ingresa una nueva Descripcion..."
+                                Keyboard="Text"
+                                Margin="0,-15,0,0"
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Text="{Binding TextDescription}" />
+                        </Frame>
+                    </Grid>
+                </StackLayout>
+
+                <StackLayout
+                    Grid.Row="6"
+                    Grid.Column="0">
+                    <Grid
+                        ColumnDefinitions="*,*"
+                        RowDefinitions="*">
+                        <Label
+                            FontAttributes="Bold"
+                            Margin="5,0,0,0"
+                            VerticalOptions="Center"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Text="NUEVO VALOR:" />
+                        <Frame
+                            BorderColor="Silver"
+                            HeightRequest="20"
+                            BackgroundColor="AliceBlue"
+                            CornerRadius="5"
+                            HasShadow="True"
+                            Margin="0,8,5,0"
+                            Padding="0,15,0,0"
+                            Grid.Row="0"
+                            Grid.Column="1">
+                            <Entry
+                                Placeholder="Ingresa un Valor"
+                                Margin="0,-20,0,0"
+                                Keyboard="Numeric"
+                                Text="{Binding TextAbono}" />
+                        </Frame>
+                    </Grid>
+                </StackLayout>
+
+                <StackLayout
+                    Grid.Row="7"
+                    Grid.Column="0">
+                    <Grid
+                        ColumnDefinitions="*"
+                        RowDefinitions="20,*">
+                        <StackLayout
+                            Background="#2E3192">
+                            <Label
+                                TextColor="White"
+                                Margin="5,0,0,0"
+                                HorizontalOptions="Center"
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                FontAttributes="Bold"
+                                Text="TIPO DE TRANSACION:" />
+                        </StackLayout>
+
+                        <Frame
+                            BorderColor="Silver"
+                            BackgroundColor="AliceBlue"
+                            CornerRadius="5"
+                            HasShadow="True"
+                            Margin="10,0,10,0"
+                            Padding="2,15,0,0"
+                            Grid.Row="1"
+                            Grid.Column="0">
+                            <Picker
+                                TextColor="Black"
+                                HorizontalOptions="Center"
+                                Title="Seleciona El Tipo"
+                                SelectedItem="{Binding SelectType}"
+                                ItemsSource="{Binding SelectType}">
+                                <Picker.Items>
+                                    <x:String>CREDITO</x:String>
+                                    <x:String>DEBITO</x:String>
+                                </Picker.Items>
+                            </Picker>
+                        </Frame>
+                    </Grid>
+                </StackLayout>
+
+                <StackLayout
+                    Grid.Row="8"
+                    Grid.Column="0">
+                    <Button
+                        TextColor="White"
+                        Margin="80,0,80,0"
+                        CornerRadius="5"
+                        Background="#2E3192"
+                        Text="GUARDAR"
+                        Command="{Binding btnSave_Data}" />
+                </StackLayout>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

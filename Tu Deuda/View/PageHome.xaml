@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Tu_Deuda.View.PageHome">
+    <ContentPage.Content>
+        <StackLayout>
+            <Grid
+                RowDefinitions="100,240,60,*"
+                ColumnDefinitions="*">
+
+                <StackLayout
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    <Grid
+                    Margin="5"
+                    RowDefinitions="*"
+                    ColumnDefinitions="30,*,30">
+                        <!--<ImageButton
+                            BackgroundColor="Transparent"
+                            Margin="10,0,0,0"
+                            Aspect="AspectFit"
+                            HeightRequest="20"
+                            WidthRequest="20"
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            Command="{Binding btnConfig}"
+                            Source="config.png" />-->
+                        <Image
+                        HeightRequest="100"
+                        WidthRequest="100"
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        Source="add_Client.png" />
+
+                        <!--<ImageButton
+                            BackgroundColor="Transparent"
+                            Margin="0,0,10,0"
+                            Aspect="AspectFit"
+                            HeightRequest="20"
+                            WidthRequest="20"
+                            Grid.Column="2"
+                            Grid.Row="0"
+                            Command="{Binding btnLanguage}"
+                            Source="{Binding Flag}" />-->
+                    </Grid>
+                </StackLayout>
+
+                <StackLayout
+                    Grid.Column="0"
+                    Grid.Row="1">
+                    <Label
+                        HorizontalOptions="Center"
+                        Text="{Binding TextDate}" />
+                    <Grid
+                        Margin="5,0,5,0"
+                        RowDefinitions="*,*,*"
+                        ColumnDefinitions="80,*">
+                        <Label
+                             VerticalOptions="Center"
+                             Grid.Column="0"
+                             Grid.Row="0"
+                             Text="{Binding NameLabel}" />
+                        <Entry
+                             Grid.Column="1"
+                             Grid.Row="0"
+                             Text="{Binding TextName}"
+                             Placeholder="{Binding NameLabel}" />
+                        <Label
+                             VerticalOptions="Center"
+                             Grid.Column="0"
+                             Grid.Row="1"
+                             Text="{Binding ValueLabel}" />
+                        <Entry
+                             Grid.Column="1"
+                             Grid.Row="1"
+                             Text="{Binding TextValor}"
+                             Keyboard="Numeric"
+                             Placeholder="{Binding ValueLabel}" />
+                        <Label
+                             Grid.Column="0"
+                             Grid.Row="2"
+                             VerticalOptions="Center"
+                             Text="{Binding DescriptionLabel}" />
+                        <Entry
+                            Grid.Column="1"
+                            Grid.Row="2"
+                            Text="{Binding TextDescription}"
+                            Keyboard="Text"
+                            Placeholder="{Binding DescriptionLabel}" />
+                    </Grid>
+                    <Button
+                            Margin="80,0,80,0"
+                            CornerRadius="5"
+                            Background="#2E3192"
+                            Text="{Binding AddClientLabel}"
+                            Command="{Binding btnSaveData}"
+                            TextColor="White" />
+                </StackLayout>
+
+                <StackLayout
+                    Margin="10,0,10,0"
+                    Grid.Column="0"
+                    Grid.Row="2">
+                    <Frame
+                        BorderColor="Silver"
+                        HasShadow="True"
+                        HeightRequest="20"
+                        CornerRadius="10">
+                        <SearchBar
+                                Text="{Binding TextSeaching}"
+                                SearchCommand="{Binding btnSearchOneClient}"
+                                SearchCommandParameter="{Binding .}"
+                                CancelButtonColor="Red"
+                                Placeholder="{Binding SearchClient}" />
+                    </Frame>
+                </StackLayout>
+
+                <StackLayout
+                    Grid.Column="0"
+                    Grid.Row="3"
+                    BackgroundColor="Transparent">
+                    <RefreshView
+                        Command="{Binding LoadItemsCommand}"
+                        RefreshColor="#0099ff"
+                        IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+                        <CollectionView
+                    x:Name="List"
+
+                    ItemsSource="{Binding List_Client}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid
+                                    HeightRequest="200"
+                                    WidthRequest="100"
+                                    RowDefinitions="*"
+                                    ColumnDefinitions="*">
+                                        <Frame
+                                            WidthRequest="20"
+                                            HeightRequest="20"
+                                            Margin="5"
+                                            BackgroundColor="black"
+                                            CornerRadius="10">
+                                            <StackLayout>
+                                                <Image
+                                                      Grid.Row="0"
+                                                      Grid.Column="1"
+                                                      Source="add_Client.png"
+                                                      HeightRequest="40"
+                                                      WidthRequest="40"
+                                              Aspect="AspectFit" />
+
+                                                <Grid
+                                                RowDefinitions="*,*"
+                                                ColumnDefinitions="*,*">
+                                                    <Label
+                                                    Grid.Row="0"
+                                                    Grid.Column="0"
+                                                    MaxLines="1"
+                                                    TextColor="White"
+                                                    Text="Nombre" />
+                                                    <Label
+                                                    Grid.Row="0"
+                                                    Grid.Column="1"
+                                                    MaxLines="1"
+                                                    TextColor="White"
+                                                    Text="{Binding Name}" />
+                                                    <Label
+                                                    Grid.Row="1"
+                                                    Grid.Column="0"
+                                                    MaxLines="1"
+                                                    TextColor="White"
+                                                    Text="Deuda:" />
+                                                    <Label
+                                                    Grid.Row="1"
+                                                    Grid.Column="1"
+                                                    MaxLines="1"
+                                                    TextColor="White"
+                                                    Text="{Binding Saldo_Inicial}" />
+                                                </Grid>
+
+                                                <Label
+                                                    MaxLines="1"
+                                                    TextColor="White"
+                                                    Text="{Binding Fecha}" />
+
+                                                <ImageButton
+                                                Margin="0,10,0,0"
+                                                BackgroundColor="Transparent"
+                                                WidthRequest="20"
+                                                HeightRequest="20"
+                                                Source="eye_light.png"
+                                                Command="{Binding Source={x:Reference List},
+                                                Path=BindingContext.btn_goDetail}"
+                                                CommandParameter="{Binding}" />
+                                            </StackLayout>
+                                        </Frame>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout
+                                    Orientation="Vertical" Span="2" />
+                            </CollectionView.ItemsLayout>
+                        </CollectionView>
+                    </RefreshView>
+                </StackLayout>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
