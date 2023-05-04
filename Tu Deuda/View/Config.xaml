@@ -15,43 +15,90 @@
                 Margin="10"
                 BorderColor="Silver"
                 CornerRadius="10"
-                HasShadow="True">
-                <Entry
-                    Keyboard="Numeric"
-                    Placeholder="Code Client"
-                    Text="" />
+                HasShadow="True"
+                IsVisible="True">
+                <Picker
+                    Title="Select DataBase"
+                    ItemsSource="{Binding DataBase}"
+                    SelectedItem="{Binding SelectDataBase}">
+                    <Picker.Items>
+                        <x:String>Web</x:String>
+                        <x:String>Sqlite</x:String>
+                        <x:String>Firebase</x:String>
+                        <x:String>Supabase</x:String>
+                    </Picker.Items>
+                </Picker>
             </Frame>
 
-            <Frame
-                Margin="10"
-                BorderColor="Silver"
-                CornerRadius="10"
-                HasShadow="True">
-                <Entry
-                    Keyboard="Text"
-                    Placeholder="Code URL Proyect"
-                    Text="" />
-            </Frame>
+
 
             <Frame
                 Margin="10"
                 BorderColor="Silver"
                 CornerRadius="10"
                 HasShadow="True"
-                HeightRequest="40">
+                IsVisible="{Binding IsVisibleFrameUrlProyect}">
+                <Entry
+                    Keyboard="Text"
+                    Placeholder="URL Proyect"
+                    Text="{Binding UrlProyect}" />
+            </Frame>
+
+
+
+            <Frame
+                Margin="10"
+                BorderColor="Silver"
+                CornerRadius="10"
+                HasShadow="True"
+                HeightRequest="40"
+                IsVisible="{Binding IsVisibleFrameUrlKeyProyect}">
                 <Entry
                     Keyboard="Text"
                     Placeholder="Key Proyect"
-                    Text="" />
+                    Text="{Binding KeyProyect}" />
             </Frame>
 
-            <Button
-                Margin="20,10,20,0"
-                Background="#2E3192"
-                Command="{Binding btnSaveConfig}"
-                CornerRadius="5"
-                Text="Guardar"
-                TextColor="White" />
+
+            <Grid ColumnDefinitions="*,100,*" RowDefinitions="60">
+                <Button
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="20,10,20,0"
+                    Background="#2E3192"
+                    Command="{Binding btnSaveConfig}"
+                    CornerRadius="5"
+                    Text="Guardar"
+                    TextColor="White" />
+
+                <Frame
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="0,0,0,0"
+                    Padding="5"
+                    BorderColor="Silver"
+                    CornerRadius="10"
+                    HasShadow="True"
+                    HorizontalOptions="Center">
+                    <Entry
+                        Margin="0,0,0,0"
+                        Keyboard="Numeric"
+                        Placeholder="Code"
+                        Text="" />
+                </Frame>
+
+                <Button
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Margin="20,10,20,0"
+                    Background="#2E3192"
+                    Command="{Binding btnCode}"
+                    CornerRadius="5"
+                    Text="Code"
+                    TextColor="White" />
+            </Grid>
+
+
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

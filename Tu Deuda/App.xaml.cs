@@ -1,10 +1,10 @@
-﻿using Tu_Deuda.View;
-using Tu_Deuda.ApplicationDB;
-using Xamarin.Forms;
-using Microsoft.EntityFrameworkCore;
-using System.Net.NetworkInformation;
-using Tu_Deuda.Model;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Tu_Deuda.ApplicationDB;
+using Tu_Deuda.Code;
+using Tu_Deuda.Model;
+using Tu_Deuda.View;
+using Xamarin.Forms;
 
 namespace Tu_Deuda
 {
@@ -26,7 +26,7 @@ namespace Tu_Deuda
 
             var searchData = _dbCcontext.Clients.Where(c => c.Id == id || c.Status == false).FirstOrDefault();
 
-            if (searchData == null )
+            if (searchData == null)
             {
                 var inicialData = new Client
                 {
@@ -40,8 +40,35 @@ namespace Tu_Deuda
 
                 _dbCcontext.Add(inicialData);
                 _dbCcontext.SaveChangesAsync();
-            } 
-           
+            }
+
+            var searchDatabase = _dbCcontext.DBApp.Where(c => c.Id == id).FirstOrDefault();
+
+            if (searchDatabase == null)
+            {
+                var inicialDatabase = new Database
+                {
+                    Id = 1,
+                    NameDatabase = "Sqlite",
+                    UrlProyect = null,
+                    KeyProyect = null,
+                };
+                _dbCcontext.Add(inicialDatabase);
+                _dbCcontext.SaveChangesAsync();
+            }
+
+            var searchCode = _dbCcontext.Code_App.Where(c => c.Id == id).FirstOrDefault();
+
+            if (searchCode == null)
+            {
+                var initialCode = new CodeApp
+                {
+                    Id = 1,
+                    CodeAdmin = AdminCode.CodeAdmin(),
+                };
+                _dbCcontext.Add(initialCode);
+                _dbCcontext.SaveChangesAsync();
+            }
         }
 
         protected override void OnStart()

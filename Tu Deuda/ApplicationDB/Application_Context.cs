@@ -37,5 +37,8 @@ namespace Tu_Deuda.ApplicationDB
         }
 
         public DbSet<Client> Clients { get; set; }
+
+        public DbSet<Database> DBApp { get; set; }
+        public DbSet<CodeApp> Code_App { get; set; }
     }
 }

@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Tu_Deuda.ApplicationDB;
 using Xamarin.Forms;
 
 namespace Tu_Deuda.ViewModel
@@ -9,24 +12,29 @@ namespace Tu_Deuda.ViewModel
         public VM_Config(INavigation navigation)
         {
             Navigation = navigation;
+
+            getConfig();
+
+            ChangeDataBase();
         }
 
         #region Properties
 
-        private int codeClient = 1;
         private string urlProyect;
         private string urlKeyProyect;
         private string _dataBase;
 
+        private bool _isVisibleFrameUrlProyect;
+        private bool _isVisibleFrameUrlKeyProyect;
+
+        private string Sqlite = "Sqlite";
+        private string Web = "Web";
+        private string Firebase = "Firebase";
+        private string Supabase = "Supabase";
+
         #endregion Properties
 
         #region Objects
-
-        public int CodeClient
-        {
-            get { return codeClient; }
-            set { codeClient = value; }
-        }
 
         public string UrlProyect
         {
@@ -34,7 +42,7 @@ namespace Tu_Deuda.ViewModel
             set { urlProyect = value; }
         }
 
-        public string UrlKeyProyect
+        public string KeyProyect
         {
             get { return urlKeyProyect; }
             set { urlKeyProyect = value; }
@@ -43,16 +51,98 @@ namespace Tu_Deuda.ViewModel
         public string DataBase
         {
             get { return _dataBase; }
-            set { _dataBase = value; }
+            set
+            {
+                _dataBase = value;
+                ChangeDataBase();
+                OnPropertyChanged();
+            }
         }
+
+        public string SelectDataBase
+        {
+            get { return _dataBase; }
+            set
+            {
+                SetProperty(ref _dataBase, value);
+                DataBase = _dataBase;
+            }
+        }
+
+        public bool IsVisibleFrameUrlProyect
+        {
+            get { return _isVisibleFrameUrlProyect; }
+            set { SetProperty(ref _isVisibleFrameUrlProyect, value); }
+        }
+
+        public bool IsVisibleFrameUrlKeyProyect
+        {
+            get { return _isVisibleFrameUrlKeyProyect; }
+            set { SetProperty(ref _isVisibleFrameUrlKeyProyect, value); }
+        }
+
+        private int idDataBase = 1;
 
         #endregion Objects
 
         #region Metthods
 
+        public async Task getConfig()
+        {
+            var _dbCcontext = new Application_Context();
+
+            var searchDatabase = await _dbCcontext.DBApp.Where(c => c.Id == idDataBase).FirstOrDefaultAsync();
+
+            if (searchDatabase != null)
+            {
+                SelectDataBase = searchDatabase.NameDatabase;
+                UrlProyect = searchDatabase.UrlProyect;
+                KeyProyect = searchDatabase.KeyProyect;
+            }
+        }
+
+        public void ChangeDataBase()
+        {
+            if (Sqlite == SelectDataBase)
+            {
+                IsVisibleFrameUrlProyect = false;
+                IsVisibleFrameUrlKeyProyect = false;
+            }
+            else if (Web == SelectDataBase)
+            {
+                IsVisibleFrameUrlProyect = true;
+                IsVisibleFrameUrlKeyProyect = false;
+            }
+            else if (Firebase == SelectDataBase)
+            {
+                IsVisibleFrameUrlProyect = true;
+                IsVisibleFrameUrlKeyProyect = false;
+            }
+            else if (Supabase == SelectDataBase)
+            {
+                IsVisibleFrameUrlProyect = true;
+                IsVisibleFrameUrlKeyProyect = true;
+            }
+        }
+
         public async Task SaveConfig()
         {
-            await DisplayAlert("Configuración", "Configuración guardada", "OK");
+            // hacer una actualizacion
+
+            var _dbCcontext = new Application_Context();
+
+            var searchDatabase = await _dbCcontext.DBApp.Where(c => c.Id == idDataBase).FirstOrDefaultAsync();
+
+            if (searchDatabase != null)
+            {
+                searchDatabase.NameDatabase = SelectDataBase;
+                searchDatabase.UrlProyect = UrlProyect;
+                searchDatabase.KeyProyect = KeyProyect;
+                _dbCcontext.Update(searchDatabase);
+                await _dbCcontext.SaveChangesAsync();
+
+                await DisplayAlert("info", "Updated Successfully", "ok");
+            }
         }
 
         #endregion Metthods
