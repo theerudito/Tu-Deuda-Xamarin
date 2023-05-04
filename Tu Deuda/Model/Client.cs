@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Postgrest.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Tu_Deuda.Model
 {
+    [Table("Client")]
     public class Client
     {
         [Key]

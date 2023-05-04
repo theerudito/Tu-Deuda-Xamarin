@@ -132,6 +132,7 @@ namespace Tu_Deuda.ViewModel
         public string _credit;
         private static string hour;
         private static string _fecha;
+        private string fetchData = "Supabase";
 
         public string NameLabel
         {
@@ -326,6 +327,7 @@ namespace Tu_Deuda.ViewModel
 
         public void OpenConfiguration()
         {
+            Navigation.PushAsync(new Config());
         }
 
         public void Change_Language()

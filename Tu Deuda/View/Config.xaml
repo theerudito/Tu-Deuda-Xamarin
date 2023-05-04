@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Tu_Deuda.View.Config"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="Center">
+            <Label
+                FontAttributes="Bold"
+                FontSize="40"
+                HorizontalOptions="Center"
+                Text="CONFIG" />
+
+            <Frame
+                Margin="10"
+                BorderColor="Silver"
+                CornerRadius="10"
+                HasShadow="True">
+                <Entry
+                    Keyboard="Numeric"
+                    Placeholder="Code Client"
+                    Text="" />
+            </Frame>
+
+            <Frame
+                Margin="10"
+                BorderColor="Silver"
+                CornerRadius="10"
+                HasShadow="True">
+                <Entry
+                    Keyboard="Text"
+                    Placeholder="Code URL Proyect"
+                    Text="" />
+            </Frame>
+
+            <Frame
+                Margin="10"
+                BorderColor="Silver"
+                CornerRadius="10"
+                HasShadow="True"
+                HeightRequest="40">
+                <Entry
+                    Keyboard="Text"
+                    Placeholder="Key Proyect"
+                    Text="" />
+            </Frame>
+
+            <Button
+                Margin="20,10,20,0"
+                Background="#2E3192"
+                Command="{Binding btnSaveConfig}"
+                CornerRadius="5"
+                Text="Guardar"
+                TextColor="White" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
