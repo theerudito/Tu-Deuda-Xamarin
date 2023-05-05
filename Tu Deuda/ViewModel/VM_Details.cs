@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Firebase.Database;
+using Firebase.Database.Query;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Tu_Deuda.ApplicationDB;
+using Tu_Deuda.Data;
 using Tu_Deuda.Model;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -19,6 +22,7 @@ namespace Tu_Deuda.ViewModel
             receivedClient = client;
             Navigation = navigation;
 
+            Task.Run(async () => await GetDataBase());
             Load_Data();
 
             var lang = SecureStorage.GetAsync("LANGUAGE").Result;
@@ -137,6 +141,44 @@ namespace Tu_Deuda.ViewModel
             set { SetValue(ref _color, value); }
         }
 
+        // DATABASE CONFIG
+        private string fetchData;
+
+        private string _urlProyect;
+        private string _urlKeyProyect;
+
+        public string FetchData
+        {
+            get { return fetchData; }
+            set
+            {
+                SetValue(ref fetchData, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string URLProyect
+        {
+            get { return _urlProyect; }
+            set
+            {
+                SetValue(ref _urlProyect, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string KeyProyect
+        {
+            get { return _urlKeyProyect; }
+            set
+            {
+                SetValue(ref _urlKeyProyect, value);
+                OnPropertyChanged();
+            }
+        }
+
+        // DATABASE CONFIG
+
         public void Load_Data()
         {
             TextDate = receivedClient.Fecha;
@@ -169,7 +211,49 @@ namespace Tu_Deuda.ViewModel
             return TextValorFinal;
         }
 
+        public async Task GetDataBase()
+        {
+            var queryDatabase = _dbContext.DBApp.Find(1);
+            if (queryDatabase == null)
+            {
+                await DisplayAlert("Alert", "You must configure the database", "OK");
+                return;
+            }
+            else
+            {
+                FetchData = queryDatabase.NameDatabase;
+                URLProyect = queryDatabase.UrlProyect;
+                KeyProyect = queryDatabase.KeyProyect;
+            }
+        }
+
         public async Task SaveData()
+        {
+            switch (FetchData)
+            {
+                case "Sqlite":
+                    await UpdateSqlite();
+                    break;
+
+                case "Supabase":
+                    await UpdateSupabase();
+                    break;
+
+                case "Firebase":
+                    await UpdateFirebase();
+                    break;
+
+                case "Web":
+                    await UpdateWeb();
+                    break;
+
+                default:
+                    await DisplayAlert("Alert", "You must configure the database", "OK");
+                    break;
+            }
+        }
+
+        public async Task UpdateSqlite()
         {
             if (TextValorFinal == 0)
             {
@@ -211,6 +295,95 @@ namespace Tu_Deuda.ViewModel
             }
         }
 
+        public async Task UpdateSupabase()
+        {
+            if (TextValorFinal == 0)
+            {
+                if (Valitations() == true)
+                {
+                    await DisplayAlert("info", "Listo Ya No Tienes Deuda", "ok");
+
+                    await Back_Home();
+                }
+            }
+            else
+            {
+                if (Valitations() == true)
+                {
+                    await DisplayAlert("info", $"Tu Deuda Ahora es de: {TextValorFinal}", "ok");
+
+                    await Back_Home();
+                }
+            }
+        }
+
+        public async Task UpdateFirebase()
+        {
+            var url = ConnectionFirebase.GetFirebaseFireStore();
+            FirebaseClient firebase = new FirebaseClient(url.ToString());
+
+            if (TextValorFinal == 0)
+            {
+                if (Valitations() == true)
+                {
+                    await firebase.Child("Clients").Child(receivedClient.ClientId).PutAsync(new MClient
+                    {
+                        Name = TextName,
+                        Description = "",
+                        Saldo_Inicial = 0,
+                        Fecha = _dateNow,
+                        Status = false
+                    });
+
+                    await DisplayAlert("info", "Listo Ya No Tienes Deuda", "ok");
+
+                    await Back_Home();
+                }
+            }
+            else
+            {
+                if (Valitations() == true)
+                {
+                    await firebase.Child("Clients").Child(receivedClient.ClientId).PutAsync(new MClient
+                    {
+                        Name = TextName,
+                        Description = TextDescription + "-",
+                        Saldo_Inicial = TextValorFinal,
+                        Fecha = _dateNow,
+                        Status = true
+                    });
+
+                    await DisplayAlert("info", $"Tu Deuda Ahora es de: {TextValorFinal}", "ok");
+
+                    await Back_Home();
+                }
+            }
+        }
+
+        public async Task UpdateWeb()
+        {
+            if (TextValorFinal == 0)
+            {
+                if (Valitations() == true)
+                {
+                    await DisplayAlert("info", "Listo Ya No Tienes Deuda", "ok");
+
+                    await Back_Home();
+                }
+            }
+            else
+            {
+                if (Valitations() == true)
+                {
+                    await DisplayAlert("info", $"Tu Deuda Ahora es de: {TextValorFinal}", "ok");
+
+                    await Back_Home();
+                }
+            }
+        }
+
+        // crear un metodo para las alerteas
+
         public bool Valitations()
         {
             if (string.IsNullOrEmpty(TextName))
@@ -248,21 +421,85 @@ namespace Tu_Deuda.ViewModel
         {
             if (await DisplayAlert("info", "Estas Seguro de querer Reseter sus Valores a 0", "yes", "no"))
             {
-                receivedClient.Status = false;
-                receivedClient.Saldo_Inicial = 0;
-                receivedClient.Description = "";
-                receivedClient.Name = TextName;
-                receivedClient.Fecha = _date;
+                switch (FetchData)
+                {
+                    case "Sqlite":
+                        await DeleteSqlite();
+                        break;
 
-                _dbContext.Update(receivedClient);
+                    case "Supabase":
+                        await DeleteSupabase();
+                        break;
 
-                await _dbContext.SaveChangesAsync();
+                    case "Firebase":
+                        await DeleteFirebase();
+                        break;
 
-                await DisplayAlert("info", "Listo Ya No Tienes Deuda", "ok");
+                    case "Web":
+                        await DeleteWeb();
+                        break;
 
-                Color = "Black";
-                Load_Data();
+                    default:
+                        await DisplayAlert("Alert", "You must configure the database", "OK");
+                        break;
+                }
             }
+        }
+
+        public async Task DeleteSqlite()
+        {
+            receivedClient.Status = false;
+            receivedClient.Saldo_Inicial = 0;
+            receivedClient.Description = "";
+            receivedClient.Name = TextName;
+            receivedClient.Fecha = _date;
+
+            _dbContext.Update(receivedClient);
+
+            await _dbContext.SaveChangesAsync();
+
+            await DisplayAlert("info", "Listo Ya No Tienes Deuda", "ok");
+
+            Color = "Black";
+            Load_Data();
+        }
+
+        public async Task DeleteSupabase()
+        {
+            await DisplayAlert("info", "Listo Ya No Tienes Deuda", "ok");
+
+            Color = "Black";
+            Load_Data();
+        }
+
+        public async Task DeleteFirebase()
+        {
+            // update en firebase
+            var url = ConnectionFirebase.GetFirebaseFireStore();
+            FirebaseClient firebase = new FirebaseClient(url.ToString());
+
+            receivedClient.Status = false;
+            receivedClient.Saldo_Inicial = 0;
+            receivedClient.Description = "";
+            receivedClient.Name = TextName;
+            receivedClient.Fecha = _date;
+
+            await firebase
+                .Child("Clients")
+                .Child(receivedClient.ClientId)
+                .PutAsync(receivedClient);
+
+            await DisplayAlert("info", "Listo Ya No Tienes Deuda", "ok");
+            Color = "Black";
+            Load_Data();
+        }
+
+        public async Task DeleteWeb()
+        {
+            await DisplayAlert("info", "Listo Ya No Tienes Deuda", "ok");
+
+            Color = "Black";
+            Load_Data();
         }
 
         #region COMMANDS

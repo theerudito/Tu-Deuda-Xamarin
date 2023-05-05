@@ -42,8 +42,6 @@ namespace Tu_Deuda.ViewModel
             }
 
             LoadItemsCommand = new Command(async () => await Load_Data());
-
-            Change_Language();
         }
 
         private ObservableCollection<MClient> _list_client;
@@ -309,12 +307,15 @@ namespace Tu_Deuda.ViewModel
                     case "Sqlite":
                         await SaveOnSqlite();
                         break;
+
                     case "Supabase":
                         await SaveOnSupabase();
                         break;
+
                     case "Firebase":
                         await SaveOnFirebase();
                         break;
+
                     case "Web":
                         await SaveOnWeb();
                         break;
@@ -354,7 +355,7 @@ namespace Tu_Deuda.ViewModel
             };
             var supabase = new Supabase.Client(URLProyect, KeyProyect, options);
             await supabase.InitializeAsync();
-            var newClient = new MClientSupabase { Name = TextName, Saldo_Inicial = TextValor, Description = TextDescription, Status = _status, Fecha = _dateNow };
+            var newClient = new MClientSupabase { Name = TextName.ToUpper().Trim(), Saldo_Inicial = TextValor, Description = TextDescription, Status = _status, Fecha = _dateNow };
             await supabase.From<MClientSupabase>().Insert(newClient);
             await DisplayAlert("Alert", "Added Successfully", "OK");
             ResetField();
@@ -369,7 +370,7 @@ namespace Tu_Deuda.ViewModel
 
             await firebase.Child("Clients").PostAsync(new MClient()
             {
-                Name = TextName,
+                Name = TextName.ToUpper().Trim(),
                 Saldo_Inicial = TextValor,
                 Description = TextDescription,
                 Status = _status,
@@ -466,6 +467,7 @@ namespace Tu_Deuda.ViewModel
             var url = ConnectionFirebase.GetFirebaseFireStore();
             FirebaseClient firebase = new FirebaseClient(url.ToString());
             var loadDataFirebase = await firebase.Child("Clients").OnceAsync<MClient>();
+
             List_Client = new ObservableCollection<MClient>();
 
             foreach (var item in loadDataFirebase)
@@ -474,6 +476,7 @@ namespace Tu_Deuda.ViewModel
                 {
                     List_Client.Add(new MClient
                     {
+                        ClientId = item.Key,
                         Name = item.Object.Name,
                         Saldo_Inicial = item.Object.Saldo_Inicial,
                         Description = item.Object.Description,
@@ -490,6 +493,90 @@ namespace Tu_Deuda.ViewModel
         }
 
         public async Task getOneClient()
+        {
+            switch (FetchData)
+            {
+                case "Sqlite":
+                    await LoadOneClientSqlite();
+                    break;
+
+                case "Supabase":
+                    await LoadOneClientSupabase();
+                    break;
+
+                case "Firebase":
+                    await LoadOneClientFirebase();
+                    break;
+
+                case "Web":
+                    await LoadOneClientWeb();
+                    break;
+            }
+        }
+
+        public async Task LoadOneClientSqlite()
+        {
+            var searchingOneClient = await _dbContext.Clients
+                                .Where(u => u.Name.StartsWith(TextSeaching.ToUpper().Trim()))
+                                .ToListAsync();
+
+            if (searchingOneClient == null)
+            {
+                await DisplayAlert("info", "No se encontraron resultados", "OK");
+            }
+            else
+            {
+                List_Client = new ObservableCollection<MClient>(searchingOneClient);
+            }
+        }
+
+        public async Task LoadOneClientSupabase()
+        {
+            var searchingOneClient = await _dbContext.Clients
+                                .Where(u => u.Name.StartsWith(TextSeaching.ToUpper().Trim()))
+                                .ToListAsync();
+
+            if (searchingOneClient == null)
+            {
+                await DisplayAlert("info", "No se encontraron resultados", "OK");
+            }
+            else
+            {
+                List_Client = new ObservableCollection<MClient>(searchingOneClient);
+            }
+        }
+
+        public async Task LoadOneClientFirebase()
+        {
+            var url = ConnectionFirebase.GetFirebaseFireStore();
+            FirebaseClient firebase = new FirebaseClient(url.ToString());
+
+            var searchingOneClient = await firebase.Child("Clients").OrderBy("Name").EqualTo(TextSeaching.ToUpper().Trim()).OnceAsync<MClient>();
+
+            if (searchingOneClient == null)
+            {
+                await DisplayAlert("info", "No se encontraron resultados", "OK");
+            }
+            else
+            {
+                List_Client = new ObservableCollection<MClient>();
+
+                foreach (var item in searchingOneClient)
+                {
+                    List_Client.Add(new MClient
+                    {
+                        ClientId = item.Key,
+                        Name = item.Object.Name,
+                        Saldo_Inicial = item.Object.Saldo_Inicial,
+                        Description = item.Object.Description,
+                        Status = item.Object.Status,
+                        Fecha = item.Object.Fecha
+                    });
+                }
+            }
+        }
+
+        public async Task LoadOneClientWeb()
         {
             var searchingOneClient = await _dbContext.Clients
                                 .Where(u => u.Name.StartsWith(TextSeaching.ToUpper().Trim()))
