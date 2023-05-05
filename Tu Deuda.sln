@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tu Deuda.Android", "Tu Deud
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tu Deuda.iOS", "Tu Deuda.iOS\Tu Deuda.iOS.csproj", "{DE8A3C7A-D966-4CA1-93D0-288EBF60C743}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tu Deuda", "Tu Deuda\Tu Deuda.csproj", "{95E3D935-B0AB-4787-B250-278D2F6E0EB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tu Deuda", "Tu Deuda\Tu Deuda.csproj", "{95E3D935-B0AB-4787-B250-278D2F6E0EB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -28,7 +28,7 @@ namespace Tu_Deuda
 
             if (searchData == null)
             {
-                var inicialData = new Client
+                var inicialData = new MClient
                 {
                     Id = 1,
                     Name = "Prueba",

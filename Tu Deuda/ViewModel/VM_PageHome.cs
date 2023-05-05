@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Firebase.Database;
+using Firebase.Database.Query;
+using Microsoft.EntityFrameworkCore;
+using Supabase;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -6,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Tu_Deuda.ApplicationDB;
+using Tu_Deuda.Data;
 using Tu_Deuda.Model;
 using Tu_Deuda.View;
 using Xamarin.Essentials;
@@ -23,6 +27,8 @@ namespace Tu_Deuda.ViewModel
         {
             Navigation = navigation;
 
+            Task.Run(async () => await GetDataBase());
+
             Task.Run(async () => await Load_Data());
 
             TextLanguage = "ES";
@@ -36,9 +42,12 @@ namespace Tu_Deuda.ViewModel
             }
 
             LoadItemsCommand = new Command(async () => await Load_Data());
+
+            Change_Language();
         }
 
-        private ObservableCollection<Client> _list_client;
+        private ObservableCollection<MClient> _list_client;
+        private ObservableCollection<MClientSupabase> _list_clientSupabase;
 
         private static string _hour = DateTime.Now.ToString("HH:mm");
         private static string _date = DateTime.Now.ToString("dd/MM/yyyy");
@@ -132,7 +141,44 @@ namespace Tu_Deuda.ViewModel
         public string _credit;
         private static string hour;
         private static string _fecha;
-        private string fetchData = "Supabase";
+
+        // DATABASE CONFIG
+        private string fetchData;
+
+        private string _urlProyect;
+        private string _urlKeyProyect;
+
+        public string FetchData
+        {
+            get { return fetchData; }
+            set
+            {
+                SetValue(ref fetchData, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string URLProyect
+        {
+            get { return _urlProyect; }
+            set
+            {
+                SetValue(ref _urlProyect, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string KeyProyect
+        {
+            get { return _urlKeyProyect; }
+            set
+            {
+                SetValue(ref _urlKeyProyect, value);
+                OnPropertyChanged();
+            }
+        }
+
+        // DATABASE CONFIG
 
         public string NameLabel
         {
@@ -216,7 +262,7 @@ namespace Tu_Deuda.ViewModel
 
         #endregion Language
 
-        public ObservableCollection<Client> List_Client
+        public ObservableCollection<MClient> List_Client
         {
             get { return _list_client; }
             set
@@ -226,36 +272,120 @@ namespace Tu_Deuda.ViewModel
             }
         }
 
-        #region METHOD.
+        public ObservableCollection<MClientSupabase> List_ClientSupabase
+        {
+            get { return _list_clientSupabase; }
+            set
+            {
+                _list_clientSupabase = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #region METHOD
+
+        public async Task GetDataBase()
+        {
+            var queryDatabase = _dbContext.DBApp.Find(1);
+            if (queryDatabase == null)
+            {
+                await DisplayAlert("Alert", "You must configure the database", "OK");
+                return;
+            }
+            else
+            {
+                FetchData = queryDatabase.NameDatabase;
+                URLProyect = queryDatabase.UrlProyect;
+                KeyProyect = queryDatabase.KeyProyect;
+            }
+        }
 
         public async Task Save_Client()
         {
             if (Valitations() == true)
             {
-                var searchName = _dbContext.Clients.Where(c => c.Name == TextName.ToUpper().Trim());
-
-                if (searchName.Count() > 0)
+                switch (FetchData)
                 {
-                    await DisplayAlert("info", "Ya Existe Un Registro Con Este Nombre", "ok");
-                }
-                else
-                {
-                    var newClient = new Client { Name = TextName.ToUpper().Trim(), Saldo_Inicial = TextValor, Description = TextDescription, Status = _status, Fecha = _dateNow, Imagen = _imageClient };
-
-                    _dbContext.Add(newClient);
-
-                    await _dbContext.SaveChangesAsync();
-
-                    await DisplayAlert("info", "Dato Guargado Con Exito", "ok");
-
-                    await Load_Data();
-
-                    ResetField();
+                    case "Sqlite":
+                        await SaveOnSqlite();
+                        break;
+                    case "Supabase":
+                        await SaveOnSupabase();
+                        break;
+                    case "Firebase":
+                        await SaveOnFirebase();
+                        break;
+                    case "Web":
+                        await SaveOnWeb();
+                        break;
                 }
             }
         }
 
-        public async Task Go_Details(Client client)
+        public async Task SaveOnSqlite()
+        {
+            var searchName = _dbContext.Clients.Where(c => c.Name == TextName.ToUpper().Trim());
+
+            if (searchName.Count() > 0)
+            {
+                await DisplayAlert("info", "Ya Existe Un Registro Con Este Nombre", "ok");
+            }
+            else
+            {
+                var newClient = new MClient { Name = TextName.ToUpper().Trim(), Saldo_Inicial = TextValor, Description = TextDescription, Status = _status, Fecha = _dateNow, Imagen = _imageClient };
+
+                _dbContext.Add(newClient);
+
+                await _dbContext.SaveChangesAsync();
+
+                await DisplayAlert("info", "Dato Guargado Con Exito", "ok");
+
+                await Load_Data();
+
+                ResetField();
+            }
+        }
+
+        public async Task SaveOnSupabase()
+        {
+            var options = new SupabaseOptions
+            {
+                AutoConnectRealtime = true
+            };
+            var supabase = new Supabase.Client(URLProyect, KeyProyect, options);
+            await supabase.InitializeAsync();
+            var newClient = new MClientSupabase { Name = TextName, Saldo_Inicial = TextValor, Description = TextDescription, Status = _status, Fecha = _dateNow };
+            await supabase.From<MClientSupabase>().Insert(newClient);
+            await DisplayAlert("Alert", "Added Successfully", "OK");
+            ResetField();
+            await Load_Data();
+        }
+
+        public async Task SaveOnFirebase()
+        {
+            var url = ConnectionFirebase.GetFirebaseFireStore();
+
+            FirebaseClient firebase = new FirebaseClient(url.ToString());
+
+            await firebase.Child("Clients").PostAsync(new MClient()
+            {
+                Name = TextName,
+                Saldo_Inicial = TextValor,
+                Description = TextDescription,
+                Status = _status,
+                Fecha = _dateNow
+            });
+
+            await DisplayAlert("Alert", "Added Successfully", "OK");
+            ResetField();
+            await Load_Data();
+        }
+
+        public async Task SaveOnWeb()
+        {
+        }
+
+        public async Task Go_Details(MClient client)
         {
             await Navigation.PushAsync(new Details(client));
         }
@@ -265,9 +395,24 @@ namespace Tu_Deuda.ViewModel
             IsBusy = true;
             try
             {
-                var loadData = await _dbContext.Clients.Where(cli => cli.Status == true).ToListAsync();
+                switch (FetchData)
+                {
+                    case "Sqlite":
+                        await LoadDataSqlite();
+                        break;
 
-                List_Client = new ObservableCollection<Client>(loadData);
+                    case "Supabase":
+                        await LoadDataSupabase();
+                        break;
+
+                    case "Firebase":
+                        await LoadDataFirebase();
+                        break;
+
+                    case "Web":
+                        await LoadDataWeb();
+                        break;
+                }
             }
             catch (Exception e)
             {
@@ -277,6 +422,71 @@ namespace Tu_Deuda.ViewModel
             {
                 IsBusy = false;
             }
+        }
+
+        public async Task LoadDataSqlite()
+        {
+            var loadDataSqlite = await _dbContext.Clients.Where(cli => cli.Status == true).ToListAsync();
+            List_Client = new ObservableCollection<MClient>(loadDataSqlite);
+            await GetDataBase();
+        }
+
+        public async Task LoadDataSupabase()
+        {
+            var options = new SupabaseOptions
+            {
+                AutoConnectRealtime = true
+            };
+            var supabase = new Supabase.Client(URLProyect, KeyProyect, options);
+            await supabase.InitializeAsync();
+
+            var loadDataSupabase = await supabase.From<MClientSupabase>().Get();
+            var resul = loadDataSupabase.Models;
+
+            List_ClientSupabase = new ObservableCollection<MClientSupabase>();
+
+            foreach (var item in resul)
+            {
+                if (item.Status == true)
+                {
+                    List_ClientSupabase.Add(new MClientSupabase
+                    {
+                        Name = item.Name,
+                        Saldo_Inicial = item.Saldo_Inicial,
+                        Description = item.Description,
+                        Status = item.Status,
+                        Fecha = item.Fecha
+                    });
+                }
+            }
+        }
+
+        public async Task LoadDataFirebase()
+        {
+            var url = ConnectionFirebase.GetFirebaseFireStore();
+            FirebaseClient firebase = new FirebaseClient(url.ToString());
+            var loadDataFirebase = await firebase.Child("Clients").OnceAsync<MClient>();
+            List_Client = new ObservableCollection<MClient>();
+
+            foreach (var item in loadDataFirebase)
+            {
+                if (item.Object.Status == true)
+                {
+                    List_Client.Add(new MClient
+                    {
+                        Name = item.Object.Name,
+                        Saldo_Inicial = item.Object.Saldo_Inicial,
+                        Description = item.Object.Description,
+                        Status = item.Object.Status,
+                        Fecha = item.Object.Fecha
+                    });
+                }
+            }
+        }
+
+        public async Task LoadDataWeb()
+        {
+            await DisplayAlert("", "No Web", "ok");
         }
 
         public async Task getOneClient()
@@ -291,7 +501,7 @@ namespace Tu_Deuda.ViewModel
             }
             else
             {
-                List_Client = new ObservableCollection<Client>(searchingOneClient);
+                List_Client = new ObservableCollection<MClient>(searchingOneClient);
             }
         }
 
@@ -376,10 +586,10 @@ namespace Tu_Deuda.ViewModel
             Flag = ImageSource.FromFile("flag_ES.png");
         }
 
-        #endregion METHOD.
+        #endregion METHOD
 
         public ICommand btnSaveData => new Command(async () => await Save_Client());
-        public ICommand btn_goDetail => new Command<Client>(async (cli) => await Go_Details(cli));
+        public ICommand btn_goDetail => new Command<MClient>(async (cli) => await Go_Details(cli));
         public ICommand btnSearchOneClient => new Command(async () => await getOneClient());
         public ICommand btnLanguage => new Command(Change_Language);
         public ICommand btnConfig => new Command(OpenConfiguration);

@@ -8,7 +8,7 @@ namespace Tu_Deuda.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Details : ContentPage
     {
-        public Details(Client client)
+        public Details(MClient client)
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);

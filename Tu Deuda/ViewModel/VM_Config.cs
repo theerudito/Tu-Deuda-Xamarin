@@ -13,6 +13,8 @@ namespace Tu_Deuda.ViewModel
         {
             Navigation = navigation;
 
+            BtnSaveConfig = false;
+
             getConfig();
 
             ChangeDataBase();
@@ -26,6 +28,9 @@ namespace Tu_Deuda.ViewModel
 
         private bool _isVisibleFrameUrlProyect;
         private bool _isVisibleFrameUrlKeyProyect;
+
+        private bool _btnSaveConfig;
+        private int _codeAdmin;
 
         private string Sqlite = "Sqlite";
         private string Web = "Web";
@@ -81,6 +86,18 @@ namespace Tu_Deuda.ViewModel
             set { SetProperty(ref _isVisibleFrameUrlKeyProyect, value); }
         }
 
+        public bool BtnSaveConfig
+        {
+            get { return _btnSaveConfig; }
+            set { SetProperty(ref _btnSaveConfig, value); }
+        }
+
+        public int CodeAdmin
+        {
+            get { return _codeAdmin; }
+            set { SetProperty(ref _codeAdmin, value); }
+        }
+
         private int idDataBase = 1;
 
         #endregion Objects
@@ -127,8 +144,6 @@ namespace Tu_Deuda.ViewModel
 
         public async Task SaveConfig()
         {
-            // hacer una actualizacion
-
             var _dbCcontext = new Application_Context();
 
             var searchDatabase = await _dbCcontext.DBApp.Where(c => c.Id == idDataBase).FirstOrDefaultAsync();
@@ -142,6 +157,26 @@ namespace Tu_Deuda.ViewModel
                 await _dbCcontext.SaveChangesAsync();
 
                 await DisplayAlert("info", "Updated Successfully", "ok");
+
+                BtnSaveConfig = false;
+            }
+        }
+
+        public async Task MyCode()
+        {
+            var _dbCcontext = new Application_Context();
+
+            var queryCode = await _dbCcontext.Code_App.Where(c => c.CodeAdmin == CodeAdmin).FirstOrDefaultAsync();
+
+            if (queryCode != null)
+            {
+                await DisplayAlert("info", "Code Correct", "ok");
+                BtnSaveConfig = true;
+                CodeAdmin = 0;
+            }
+            else
+            {
+                await DisplayAlert("info", "Code Incorrect", "ok");
             }
         }
 
@@ -150,6 +185,7 @@ namespace Tu_Deuda.ViewModel
         #region Commands
 
         public ICommand btnSaveConfig => new Command(async () => await SaveConfig());
+        public ICommand btnCodeConfig => new Command(async () => await MyCode());
 
         #endregion Commands
     }

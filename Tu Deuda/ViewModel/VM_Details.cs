@@ -12,9 +12,9 @@ namespace Tu_Deuda.ViewModel
     public class VM_Details : BaseVM
     {
         private Application_Context _dbContext = new Application_Context();
-        public Client receivedClient { get; set; }
+        public MClient receivedClient { get; set; }
 
-        public VM_Details(INavigation navigation, Client client)
+        public VM_Details(INavigation navigation, MClient client)
         {
             receivedClient = client;
             Navigation = navigation;
