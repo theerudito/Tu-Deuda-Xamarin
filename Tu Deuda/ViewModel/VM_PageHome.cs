@@ -453,21 +453,30 @@ namespace Tu_Deuda.ViewModel
         {
             await GetDataBase();
 
-            var supabase = new Supabase.Client(URLProyect, KeyProyect);
+            string pro = "https://onrtcoqaqwpzdnrkthve.supabase.co/rest/v1/Client";
+
+            //URLProyect
+
+            var supabase = new Supabase.Client(pro, KeyProyect);
 
             var loadDataSupabase = await supabase.From<MClientSupabase>().Get();
 
-            if (loadDataSupabase.ResponseMessage.IsSuccessStatusCode)
+            List_Client = new ObservableCollection<MClient>();
+
+            foreach (var item in loadDataSupabase.Models)
             {
-                var data = loadDataSupabase.Models;
-                foreach (var item in data)
+                await DisplayAlert("Alert", item.Name, "OK");
+                if (item.Status == true)
                 {
-                    await DisplayAlert("Alert", "Added Successfully", "OK");
+                    List_Client.Add(new MClient
+                    {
+                        Name = item.Name,
+                        Saldo_Inicial = item.Saldo_Inicial,
+                        Description = item.Description,
+                        Status = item.Status,
+                        Fecha = item.Fecha
+                    });
                 }
-            }
-            else
-            {
-                Console.WriteLine($"Error al obtener los datos: {loadDataSupabase.ResponseMessage}");
             }
         }
 
@@ -510,8 +519,6 @@ namespace Tu_Deuda.ViewModel
                 var json = await response.Content.ReadAsStringAsync();
 
                 ObservableCollection<MClient> clients = JsonConvert.DeserializeObject<ObservableCollection<MClient>>(json);
-
-                // enviar todo el listado a la lista observable para que se muestre en la vista en true
 
                 List_Client = new ObservableCollection<MClient>(clients.Where(cli => cli.Status == true));
 
