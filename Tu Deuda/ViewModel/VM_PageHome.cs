@@ -49,7 +49,6 @@ namespace Tu_Deuda.ViewModel
         }
 
         private ObservableCollection<MClient> _list_client;
-        private ObservableCollection<MClientSupabase> _list_clientSupabase;
 
         private static string _hour = DateTime.Now.ToString("HH:mm");
         private static string _date = DateTime.Now.ToString("dd/MM/yyyy");
@@ -274,16 +273,6 @@ namespace Tu_Deuda.ViewModel
             }
         }
 
-        //public ObservableCollection<MClientSupabase> List_ClientSupabase
-        //{
-        //    get { return _list_clientSupabase; }
-        //    set
-        //    {
-        //        _list_clientSupabase = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
-
         #region METHOD
 
         public async Task GetDataBase()
@@ -363,8 +352,6 @@ namespace Tu_Deuda.ViewModel
             };
             var supabase = new Supabase.Client(URLProyect, KeyProyect, options);
             await supabase.InitializeAsync();
-
-            // mappear la tabla
 
             var newClient = new MClientSupabase { Name = TextName.ToUpper().Trim(), Saldo_Inicial = TextValor, Description = TextDescription, Status = _status, Fecha = _dateNow };
             await supabase.From<MClientSupabase>().Insert(newClient);
@@ -464,38 +451,23 @@ namespace Tu_Deuda.ViewModel
 
         public async Task LoadDataSupabase()
         {
-            var options = new SupabaseOptions
-            {
-                AutoConnectRealtime = true
-            };
-            var supabase = new Supabase.Client(URLProyect, KeyProyect, options);
-            await supabase.InitializeAsync();
+            await GetDataBase();
+
+            var supabase = new Supabase.Client(URLProyect, KeyProyect);
 
             var loadDataSupabase = await supabase.From<MClientSupabase>().Get();
-            var resul = loadDataSupabase.Models;
 
-            if (resul != null)
+            if (loadDataSupabase.ResponseMessage.IsSuccessStatusCode)
             {
-                List_Client = new ObservableCollection<MClient>();
-
-                foreach (var item in resul)
+                var data = loadDataSupabase.Models;
+                foreach (var item in data)
                 {
-                    if (item.Status == true)
-                    {
-                        List_Client.Add(new MClient
-                        {
-                            Name = item.Name,
-                            Saldo_Inicial = item.Saldo_Inicial,
-                            Description = item.Description,
-                            Status = item.Status,
-                            Fecha = item.Fecha
-                        });
-                    }
+                    await DisplayAlert("Alert", "Added Successfully", "OK");
                 }
             }
             else
             {
-                await DisplayAlert("info", "not Data", "ok");
+                Console.WriteLine($"Error al obtener los datos: {loadDataSupabase.ResponseMessage}");
             }
         }
 
@@ -529,40 +501,26 @@ namespace Tu_Deuda.ViewModel
         {
             var url = ConnectionWeb.UrlWeb();
 
-            var client = new HttpClient();
+            var fetch = new HttpClient();
 
-            var response = await client.GetAsync(url + "/api/ControllerClient");
+            var response = await fetch.GetAsync($"{url}/api/ControllerClient");
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var json = await response.Content.ReadAsStringAsync();
 
-                List_Client = JsonConvert.DeserializeObject<ObservableCollection<MClient>>(json);
+                ObservableCollection<MClient> clients = JsonConvert.DeserializeObject<ObservableCollection<MClient>>(json);
 
-                //List_Client = new ObservableCollection<MClient>();
+                // enviar todo el listado a la lista observable para que se muestre en la vista en true
 
-                //foreach (var item in loadDataWeb)
-                //{
-                //    if (item.Status == true)
-                //    {
-                //        List_Client.Add(new MClient
-                //        {
-                //            ClientId = item.ClientId,
-                //            Name = item.Name,
-                //            Saldo_Inicial = item.Saldo_Inicial,
-                //            Description = item.Description,
-                //            Status = item.Status,
-                //            Fecha = item.Fecha
-                //        });
-                //    }
-                //}
+                List_Client = new ObservableCollection<MClient>(clients.Where(cli => cli.Status == true));
+
+                await GetDataBase();
             }
             else
             {
-                await DisplayAlert("info", "not Data", "ok");
+                await DisplayAlert("Alert", "Error al Conectar con la API o Sin Internet", "OK");
             }
-
-            await GetDataBase();
         }
 
         public async Task getOneClient()
@@ -748,10 +706,14 @@ namespace Tu_Deuda.ViewModel
 
         #endregion METHOD
 
+        #region COMMAND
+
         public ICommand btnSaveData => new Command(async () => await Save_Client());
         public ICommand btn_goDetail => new Command<MClient>(async (cli) => await Go_Details(cli));
         public ICommand btnSearchOneClient => new Command(async () => await getOneClient());
         public ICommand btnLanguage => new Command(Change_Language);
         public ICommand btnConfig => new Command(OpenConfiguration);
+
+        #endregion COMMAND
     }
 }

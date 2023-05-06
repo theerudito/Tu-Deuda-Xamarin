@@ -540,8 +540,7 @@ namespace Tu_Deuda.ViewModel
                 await DisplayAlert("info", "Error al Eliminar", "ok");
             }
 
-            Color = "Black";
-            Load_Data();
+
         }
 
         #region COMMANDS
