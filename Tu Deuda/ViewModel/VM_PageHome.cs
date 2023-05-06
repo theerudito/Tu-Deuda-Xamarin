@@ -274,15 +274,15 @@ namespace Tu_Deuda.ViewModel
             }
         }
 
-        public ObservableCollection<MClientSupabase> List_ClientSupabase
-        {
-            get { return _list_clientSupabase; }
-            set
-            {
-                _list_clientSupabase = value;
-                OnPropertyChanged();
-            }
-        }
+        //public ObservableCollection<MClientSupabase> List_ClientSupabase
+        //{
+        //    get { return _list_clientSupabase; }
+        //    set
+        //    {
+        //        _list_clientSupabase = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
 
         #region METHOD
 
@@ -474,21 +474,28 @@ namespace Tu_Deuda.ViewModel
             var loadDataSupabase = await supabase.From<MClientSupabase>().Get();
             var resul = loadDataSupabase.Models;
 
-            List_ClientSupabase = new ObservableCollection<MClientSupabase>();
-
-            foreach (var item in resul)
+            if (resul != null)
             {
-                if (item.Status == true)
+                List_Client = new ObservableCollection<MClient>();
+
+                foreach (var item in resul)
                 {
-                    List_ClientSupabase.Add(new MClientSupabase
+                    if (item.Status == true)
                     {
-                        Name = item.Name,
-                        Saldo_Inicial = item.Saldo_Inicial,
-                        Description = item.Description,
-                        Status = item.Status,
-                        Fecha = item.Fecha
-                    });
+                        List_Client.Add(new MClient
+                        {
+                            Name = item.Name,
+                            Saldo_Inicial = item.Saldo_Inicial,
+                            Description = item.Description,
+                            Status = item.Status,
+                            Fecha = item.Fecha
+                        });
+                    }
                 }
+            }
+            else
+            {
+                await DisplayAlert("info", "not Data", "ok");
             }
         }
 
