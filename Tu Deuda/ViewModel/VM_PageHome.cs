@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Supabase;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -524,34 +524,37 @@ namespace Tu_Deuda.ViewModel
 
             var client = new HttpClient();
 
-            var response = await client.GetStringAsync(url + "/api/ControllerClient");
+            var response = await client.GetAsync(url + "/api/ControllerClient");
 
-            var loadDataWeb = JsonConvert.DeserializeObject<List<MClient>>(response);
-
-            List_Client = new ObservableCollection<MClient>();
-
-            if (loadDataWeb != null)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
-                foreach (var item in loadDataWeb)
-                {
-                    if (item.Status == true)
-                    {
-                        List_Client.Add(new MClient
-                        {
-                            ClientId = item.ClientId,
-                            Name = item.Name,
-                            Saldo_Inicial = item.Saldo_Inicial,
-                            Description = item.Description,
-                            Status = item.Status,
-                            Fecha = item.Fecha
-                        });
-                    }
-                }
+                var json = await response.Content.ReadAsStringAsync();
+
+                List_Client = JsonConvert.DeserializeObject<ObservableCollection<MClient>>(json);
+
+                //List_Client = new ObservableCollection<MClient>();
+
+                //foreach (var item in loadDataWeb)
+                //{
+                //    if (item.Status == true)
+                //    {
+                //        List_Client.Add(new MClient
+                //        {
+                //            ClientId = item.ClientId,
+                //            Name = item.Name,
+                //            Saldo_Inicial = item.Saldo_Inicial,
+                //            Description = item.Description,
+                //            Status = item.Status,
+                //            Fecha = item.Fecha
+                //        });
+                //    }
+                //}
             }
             else
             {
-                await DisplayAlert("Alert", "No se encontraron datos", "OK");
+                await DisplayAlert("info", "not Data", "ok");
             }
+
             await GetDataBase();
         }
 
