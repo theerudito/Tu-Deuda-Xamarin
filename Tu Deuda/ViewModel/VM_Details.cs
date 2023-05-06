@@ -1,6 +1,9 @@
 ﻿using Firebase.Database;
 using Firebase.Database.Query;
+using Newtonsoft.Json;
 using System;
+using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -362,10 +365,24 @@ namespace Tu_Deuda.ViewModel
 
         public async Task UpdateWeb()
         {
+            var url = ConnectionWeb.UrlWeb();
+
+            var fetch = new HttpClient();
+
             if (TextValorFinal == 0)
             {
                 if (Valitations() == true)
                 {
+                    var response = await fetch.PutAsync($"{url}/api/ControllerClient/{receivedClient.Id}",
+                        new StringContent(JsonConvert.SerializeObject(new MClient
+                        {
+                            Name = TextName,
+                            Description = "",
+                            Saldo_Inicial = 0,
+                            Fecha = _dateNow,
+                            Status = false
+                        }), Encoding.UTF8, "application/json"));
+
                     await DisplayAlert("info", "Listo Ya No Tienes Deuda", "ok");
 
                     await Back_Home();
@@ -375,6 +392,16 @@ namespace Tu_Deuda.ViewModel
             {
                 if (Valitations() == true)
                 {
+                    var response = await fetch.PutAsync($"{url}/api/ControllerClient/{receivedClient.Id}",
+                        new StringContent(JsonConvert.SerializeObject(new MClient
+                        {
+                            Name = TextName,
+                            Description = TextDescription + "-",
+                            Saldo_Inicial = TextValorFinal,
+                            Fecha = _dateNow,
+                            Status = true
+                        }), Encoding.UTF8, "application/json"));
+
                     await DisplayAlert("info", $"Tu Deuda Ahora es de: {TextValorFinal}", "ok");
 
                     await Back_Home();
@@ -496,7 +523,22 @@ namespace Tu_Deuda.ViewModel
 
         public async Task DeleteWeb()
         {
-            await DisplayAlert("info", "Listo Ya No Tienes Deuda", "ok");
+            var url = ConnectionWeb.UrlWeb();
+
+            var fetch = new HttpClient();
+
+            var deleteDeuda = await fetch.DeleteAsync($"{url}/api/ControllerClient/{receivedClient.Id}");
+
+            if (deleteDeuda.IsSuccessStatusCode)
+            {
+                await DisplayAlert("info", "Listo Ya No Tienes Deuda", "ok");
+                Color = "Black";
+                Load_Data();
+            }
+            else
+            {
+                await DisplayAlert("info", "Error al Eliminar", "ok");
+            }
 
             Color = "Black";
             Load_Data();

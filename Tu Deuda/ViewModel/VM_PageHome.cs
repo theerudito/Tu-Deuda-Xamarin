@@ -1,11 +1,15 @@
 ﻿using Firebase.Database;
 using Firebase.Database.Query;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Supabase;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Tu_Deuda.ApplicationDB;
@@ -319,6 +323,10 @@ namespace Tu_Deuda.ViewModel
                     case "Web":
                         await SaveOnWeb();
                         break;
+
+                    default:
+                        await DisplayAlert("Alert", "You must configure the database", "OK");
+                        break;
                 }
             }
         }
@@ -355,6 +363,9 @@ namespace Tu_Deuda.ViewModel
             };
             var supabase = new Supabase.Client(URLProyect, KeyProyect, options);
             await supabase.InitializeAsync();
+
+            // mappear la tabla
+
             var newClient = new MClientSupabase { Name = TextName.ToUpper().Trim(), Saldo_Inicial = TextValor, Description = TextDescription, Status = _status, Fecha = _dateNow };
             await supabase.From<MClientSupabase>().Insert(newClient);
             await DisplayAlert("Alert", "Added Successfully", "OK");
@@ -384,6 +395,21 @@ namespace Tu_Deuda.ViewModel
 
         public async Task SaveOnWeb()
         {
+            var url = ConnectionWeb.UrlWeb();
+
+            var client = new HttpClient();
+
+            var newClient = new MClient { Name = TextName.ToUpper().Trim(), Saldo_Inicial = TextValor, Description = TextDescription, Status = _status, Fecha = _dateNow };
+
+            var json = JsonConvert.SerializeObject(newClient);
+
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            await client.PostAsync(url + "/api/ControllerClient", content);
+
+            await DisplayAlert("Alert", "Added Successfully", "OK");
+            ResetField();
+            await Load_Data();
         }
 
         public async Task Go_Details(MClient client)
@@ -412,6 +438,10 @@ namespace Tu_Deuda.ViewModel
 
                     case "Web":
                         await LoadDataWeb();
+                        break;
+
+                    default:
+                        await DisplayAlert("Alert", "You must configure the database", "OK");
                         break;
                 }
             }
@@ -485,11 +515,44 @@ namespace Tu_Deuda.ViewModel
                     });
                 }
             }
+            await GetDataBase();
         }
 
         public async Task LoadDataWeb()
         {
-            await DisplayAlert("", "No Web", "ok");
+            var url = ConnectionWeb.UrlWeb();
+
+            var client = new HttpClient();
+
+            var response = await client.GetStringAsync(url + "/api/ControllerClient");
+
+            var loadDataWeb = JsonConvert.DeserializeObject<List<MClient>>(response);
+
+            List_Client = new ObservableCollection<MClient>();
+
+            if (loadDataWeb != null)
+            {
+                foreach (var item in loadDataWeb)
+                {
+                    if (item.Status == true)
+                    {
+                        List_Client.Add(new MClient
+                        {
+                            ClientId = item.ClientId,
+                            Name = item.Name,
+                            Saldo_Inicial = item.Saldo_Inicial,
+                            Description = item.Description,
+                            Status = item.Status,
+                            Fecha = item.Fecha
+                        });
+                    }
+                }
+            }
+            else
+            {
+                await DisplayAlert("Alert", "No se encontraron datos", "OK");
+            }
+            await GetDataBase();
         }
 
         public async Task getOneClient()
