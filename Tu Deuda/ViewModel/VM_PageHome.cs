@@ -362,9 +362,7 @@ namespace Tu_Deuda.ViewModel
 
         public async Task SaveOnFirebase()
         {
-            var url = ConnectionFirebase.GetFirebaseFireStore();
-
-            FirebaseClient firebase = new FirebaseClient(url.ToString());
+            FirebaseClient firebase = new FirebaseClient(Connections.urlFirebase().ToString());
 
             await firebase.Child("Clients").PostAsync(new MClient()
             {
@@ -382,8 +380,6 @@ namespace Tu_Deuda.ViewModel
 
         public async Task SaveOnWeb()
         {
-            var url = ConnectionWeb.UrlWeb();
-
             var client = new HttpClient();
 
             var newClient = new MClient { Name = TextName.ToUpper().Trim(), Saldo_Inicial = TextValor, Description = TextDescription, Status = _status, Fecha = _dateNow };
@@ -392,7 +388,7 @@ namespace Tu_Deuda.ViewModel
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            await client.PostAsync(url + "/api/ControllerClient", content);
+            await client.PostAsync(Connections.urlWebApi() + "/api/ControllerClient", content);
 
             await DisplayAlert("Alert", "Added Successfully", "OK");
             ResetField();
@@ -451,13 +447,7 @@ namespace Tu_Deuda.ViewModel
 
         public async Task LoadDataSupabase()
         {
-            await GetDataBase();
-
-            string pro = "https://onrtcoqaqwpzdnrkthve.supabase.co/rest/v1/Client";
-
-            //URLProyect
-
-            var supabase = new Supabase.Client(pro, KeyProyect);
+            var supabase = new Supabase.Client(URLProyect, KeyProyect);
 
             var loadDataSupabase = await supabase.From<MClientSupabase>().Get();
 
@@ -482,8 +472,7 @@ namespace Tu_Deuda.ViewModel
 
         public async Task LoadDataFirebase()
         {
-            var url = ConnectionFirebase.GetFirebaseFireStore();
-            FirebaseClient firebase = new FirebaseClient(url.ToString());
+            FirebaseClient firebase = new FirebaseClient(Connections.urlFirebase().ToString());
             var loadDataFirebase = await firebase.Child("Clients").OnceAsync<MClient>();
 
             List_Client = new ObservableCollection<MClient>();
@@ -508,19 +497,17 @@ namespace Tu_Deuda.ViewModel
 
         public async Task LoadDataWeb()
         {
-            var url = ConnectionWeb.UrlWeb();
-
             var fetch = new HttpClient();
 
-            var response = await fetch.GetAsync($"{url}/api/ControllerClient");
+            var response = await fetch.GetAsync($"{Connections.urlWebApi()}/api/ControllerClient");
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var json = await response.Content.ReadAsStringAsync();
 
-                ObservableCollection<MClient> clients = JsonConvert.DeserializeObject<ObservableCollection<MClient>>(json);
+                var data = JsonConvert.DeserializeObject<MClient[]>(json);
 
-                List_Client = new ObservableCollection<MClient>(clients.Where(cli => cli.Status == true));
+                List_Client = new ObservableCollection<MClient>(data);
 
                 await GetDataBase();
             }
@@ -586,8 +573,7 @@ namespace Tu_Deuda.ViewModel
 
         public async Task LoadOneClientFirebase()
         {
-            var url = ConnectionFirebase.GetFirebaseFireStore();
-            FirebaseClient firebase = new FirebaseClient(url.ToString());
+            FirebaseClient firebase = new FirebaseClient(Connections.urlFirebase());
 
             var searchingOneClient = await firebase.Child("Clients").OrderBy("Name").EqualTo(TextSeaching.ToUpper().Trim()).OnceAsync<MClient>();
 

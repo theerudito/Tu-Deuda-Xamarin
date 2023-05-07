@@ -322,8 +322,7 @@ namespace Tu_Deuda.ViewModel
 
         public async Task UpdateFirebase()
         {
-            var url = ConnectionFirebase.GetFirebaseFireStore();
-            FirebaseClient firebase = new FirebaseClient(url.ToString());
+            FirebaseClient firebase = new FirebaseClient(Connections.urlFirebase());
 
             if (TextValorFinal == 0)
             {
@@ -365,15 +364,13 @@ namespace Tu_Deuda.ViewModel
 
         public async Task UpdateWeb()
         {
-            var url = ConnectionWeb.UrlWeb();
-
             var fetch = new HttpClient();
 
             if (TextValorFinal == 0)
             {
                 if (Valitations() == true)
                 {
-                    var response = await fetch.PutAsync($"{url}/api/ControllerClient/{receivedClient.Id}",
+                    var response = await fetch.PutAsync($"{Connections.urlWebApi()}/api/ControllerClient/{receivedClient.Id}",
                         new StringContent(JsonConvert.SerializeObject(new MClient
                         {
                             Name = TextName,
@@ -392,7 +389,7 @@ namespace Tu_Deuda.ViewModel
             {
                 if (Valitations() == true)
                 {
-                    var response = await fetch.PutAsync($"{url}/api/ControllerClient/{receivedClient.Id}",
+                    var response = await fetch.PutAsync($"{Connections.urlWebApi()}/api/ControllerClient/{receivedClient.Id}",
                         new StringContent(JsonConvert.SerializeObject(new MClient
                         {
                             Name = TextName,
@@ -501,9 +498,7 @@ namespace Tu_Deuda.ViewModel
 
         public async Task DeleteFirebase()
         {
-            // update en firebase
-            var url = ConnectionFirebase.GetFirebaseFireStore();
-            FirebaseClient firebase = new FirebaseClient(url.ToString());
+            FirebaseClient firebase = new FirebaseClient(Connections.urlFirebase());
 
             receivedClient.Status = false;
             receivedClient.Saldo_Inicial = 0;
@@ -523,11 +518,9 @@ namespace Tu_Deuda.ViewModel
 
         public async Task DeleteWeb()
         {
-            var url = ConnectionWeb.UrlWeb();
-
             var fetch = new HttpClient();
 
-            var deleteDeuda = await fetch.DeleteAsync($"{url}/api/ControllerClient/{receivedClient.Id}");
+            var deleteDeuda = await fetch.DeleteAsync($"{Connections.urlWebApi()}/api/ControllerClient/{receivedClient.Id}");
 
             if (deleteDeuda.IsSuccessStatusCode)
             {
@@ -539,8 +532,6 @@ namespace Tu_Deuda.ViewModel
             {
                 await DisplayAlert("info", "Error al Eliminar", "ok");
             }
-
-
         }
 
         #region COMMANDS
