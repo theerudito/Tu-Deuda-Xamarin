@@ -43,6 +43,7 @@
                 </StackLayout>
 
                 <StackLayout Grid.Row="1" Grid.Column="0">
+                    <Label HorizontalOptions="Center" Text="{Binding FetchData}" />
                     <Label HorizontalOptions="Center" Text="{Binding TextDate}" />
                     <Grid
                         Margin="5,0,5,0"

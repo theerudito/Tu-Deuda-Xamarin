@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Supabase;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -144,7 +145,7 @@ namespace Tu_Deuda.ViewModel
         private static string _fecha;
 
         // DATABASE CONFIG
-        private string fetchData;
+        private static string fetchData;
 
         private string _urlProyect;
         private string _urlKeyProyect;
@@ -268,7 +269,7 @@ namespace Tu_Deuda.ViewModel
             get { return _list_client; }
             set
             {
-                _list_client = value;
+                SetValue(ref _list_client, value);
                 OnPropertyChanged();
             }
         }
@@ -499,17 +500,18 @@ namespace Tu_Deuda.ViewModel
         {
             var fetch = new HttpClient();
 
-            var response = await fetch.GetAsync($"{Connections.urlWebApi()}/api/ControllerClient");
+            var response = await fetch.GetAsync(Connections.urlWebApi() + "/api/ControllerClient");
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var json = await response.Content.ReadAsStringAsync();
 
-                var data = JsonConvert.DeserializeObject<MClient[]>(json);
+                var result = JsonConvert.DeserializeObject<List<MClient>>(json);
 
-                List_Client = new ObservableCollection<MClient>(data);
-
-                await GetDataBase();
+                foreach (var item in result)
+                {
+                    await DisplayAlert("Alert", item.Name, "OK");
+                }
             }
             else
             {
