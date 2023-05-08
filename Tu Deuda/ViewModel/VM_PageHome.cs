@@ -457,6 +457,8 @@ namespace Tu_Deuda.ViewModel
 
             List<MClientSupabase> result = loadDataSupabase.Models;
 
+            List_Client = new ObservableCollection<MClient>();
+
             foreach (var item in result)
             {
                 if (item.Status == true)
@@ -478,6 +480,8 @@ namespace Tu_Deuda.ViewModel
         {
             FirebaseClient firebase = new FirebaseClient(Connections.urlFirebase().ToString());
             var loadDataFirebase = await firebase.Child("Clients").OnceAsync<MClient>();
+
+            List_Client = new ObservableCollection<MClient>();
 
             foreach (var item in loadDataFirebase)
             {
@@ -502,12 +506,29 @@ namespace Tu_Deuda.ViewModel
 
             var response = await fetch.GetAsync(Connections.urlWebApi() + "/api/ControllerClient");
 
+            List_Client = new ObservableCollection<MClient>();
+
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
 
                 var result = JsonConvert.DeserializeObject<List<MClient>>(json);
-                List_Client = new ObservableCollection<MClient>(result);
+
+                foreach (var item in result)
+                {
+                    if (item.Status == true)
+                    {
+                        List_Client.Add(new MClient
+                        {
+                            ClientId = item.ClientId,
+                            Name = item.Name,
+                            Saldo_Inicial = item.Saldo_Inicial,
+                            Description = item.Description,
+                            Status = item.Status,
+                            Fecha = item.Fecha
+                        });
+                    }
+                }
             }
             else
             {
