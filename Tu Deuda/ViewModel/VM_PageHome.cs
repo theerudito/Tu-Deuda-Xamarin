@@ -453,7 +453,7 @@ namespace Tu_Deuda.ViewModel
 
             var supabase = new Supabase.Client(URLProyect, KeyProyect, options);
 
-            var loadDataSupabase = await supabase.From<MClientSupabase>().Select("*").ExecuteAsync();
+            var loadDataSupabase = await supabase.From<MClientSupabase>().Get();
 
             List<MClientSupabase> result = loadDataSupabase.Models;
 
