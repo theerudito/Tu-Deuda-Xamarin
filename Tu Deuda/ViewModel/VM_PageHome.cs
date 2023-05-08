@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -443,24 +442,28 @@ namespace Tu_Deuda.ViewModel
         {
             var loadDataSqlite = await _dbContext.Clients.Where(cli => cli.Status == true).ToListAsync();
             List_Client = new ObservableCollection<MClient>(loadDataSqlite);
-            await GetDataBase();
         }
 
         public async Task LoadDataSupabase()
         {
-            var supabase = new Supabase.Client(URLProyect, KeyProyect);
-
-            var loadDataSupabase = await supabase.From<MClientSupabase>().Get();
-
-            List_Client = new ObservableCollection<MClient>();
-
-            foreach (var item in loadDataSupabase.Models)
+            var options = new SupabaseOptions
             {
-                await DisplayAlert("Alert", item.Name, "OK");
+                AutoConnectRealtime = true
+            };
+
+            var supabase = new Supabase.Client(URLProyect, KeyProyect, options);
+
+            var loadDataSupabase = await supabase.From<MClientSupabase>().Select("*").ExecuteAsync();
+
+            List<MClientSupabase> result = loadDataSupabase.Models;
+
+            foreach (var item in result)
+            {
                 if (item.Status == true)
                 {
                     List_Client.Add(new MClient
                     {
+                        Id = item.Id,
                         Name = item.Name,
                         Saldo_Inicial = item.Saldo_Inicial,
                         Description = item.Description,
@@ -475,8 +478,6 @@ namespace Tu_Deuda.ViewModel
         {
             FirebaseClient firebase = new FirebaseClient(Connections.urlFirebase().ToString());
             var loadDataFirebase = await firebase.Child("Clients").OnceAsync<MClient>();
-
-            List_Client = new ObservableCollection<MClient>();
 
             foreach (var item in loadDataFirebase)
             {
@@ -493,7 +494,6 @@ namespace Tu_Deuda.ViewModel
                     });
                 }
             }
-            await GetDataBase();
         }
 
         public async Task LoadDataWeb()
@@ -502,16 +502,12 @@ namespace Tu_Deuda.ViewModel
 
             var response = await fetch.GetAsync(Connections.urlWebApi() + "/api/ControllerClient");
 
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
 
                 var result = JsonConvert.DeserializeObject<List<MClient>>(json);
-
-                foreach (var item in result)
-                {
-                    await DisplayAlert("Alert", item.Name, "OK");
-                }
+                List_Client = new ObservableCollection<MClient>(result);
             }
             else
             {
@@ -585,8 +581,6 @@ namespace Tu_Deuda.ViewModel
             }
             else
             {
-                List_Client = new ObservableCollection<MClient>();
-
                 foreach (var item in searchingOneClient)
                 {
                     List_Client.Add(new MClient

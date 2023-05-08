@@ -3,7 +3,7 @@ using Postgrest.Models;
 
 namespace Tu_Deuda.Model
 {
-    [Table("Client")]
+    [Table("MClientSupabase")]
     public class MClientSupabase : BaseModel
     {
         [PrimaryKey("id")]

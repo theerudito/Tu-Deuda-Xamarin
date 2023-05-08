@@ -370,7 +370,7 @@ namespace Tu_Deuda.ViewModel
             {
                 if (Valitations() == true)
                 {
-                    var response = await fetch.PutAsync($"{Connections.urlWebApi()}/api/ControllerClient/{receivedClient.Id}",
+                    await fetch.PutAsync($"{Connections.urlWebApi()}/api/ControllerClient/{receivedClient.Id}",
                         new StringContent(JsonConvert.SerializeObject(new MClient
                         {
                             Name = TextName,
@@ -389,15 +389,15 @@ namespace Tu_Deuda.ViewModel
             {
                 if (Valitations() == true)
                 {
-                    var response = await fetch.PutAsync($"{Connections.urlWebApi()}/api/ControllerClient/{receivedClient.Id}",
-                        new StringContent(JsonConvert.SerializeObject(new MClient
-                        {
-                            Name = TextName,
-                            Description = TextDescription + "-",
-                            Saldo_Inicial = TextValorFinal,
-                            Fecha = _dateNow,
-                            Status = true
-                        }), Encoding.UTF8, "application/json"));
+                    await fetch.PutAsync($"{Connections.urlWebApi()}/api/ControllerClient/{receivedClient.Id}",
+                       new StringContent(JsonConvert.SerializeObject(new MClient
+                       {
+                           Name = TextName,
+                           Description = TextDescription + "-",
+                           Saldo_Inicial = TextValorFinal,
+                           Fecha = _dateNow,
+                           Status = true
+                       }), Encoding.UTF8, "application/json"));
 
                     await DisplayAlert("info", $"Tu Deuda Ahora es de: {TextValorFinal}", "ok");
 
@@ -405,8 +405,6 @@ namespace Tu_Deuda.ViewModel
                 }
             }
         }
-
-        // crear un metodo para las alerteas
 
         public bool Valitations()
         {
