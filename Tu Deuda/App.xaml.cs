@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Plugin.FirebasePushNotification;
 using System.Linq;
 using Tu_Deuda.ApplicationDB;
 using Tu_Deuda.Code;
@@ -12,11 +13,7 @@ namespace Tu_Deuda
     {
         public App()
         {
-            InitializeComponent();
-
             Xamarin.Essentials.SecureStorage.SetAsync("LANGUAGE", "EN");
-
-            MainPage = new NavigationPage(new PageHome());
 
             var _dbCcontext = new Application_Context();
 
@@ -69,6 +66,17 @@ namespace Tu_Deuda
                 _dbCcontext.Add(initialCode);
                 _dbCcontext.SaveChangesAsync();
             }
+
+            InitializeComponent();
+            MainPage = new NavigationPage(new PageHome());
+
+            CrossFirebasePushNotification.Current.Subscribe("all");
+            CrossFirebasePushNotification.Current.OnTokenRefresh += Current_OnTokenRefresh;
+        }
+
+        private void Current_OnTokenRefresh(object source, FirebasePushNotificationTokenEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine($"Token: {e.Token}");
         }
 
         protected override void OnStart()

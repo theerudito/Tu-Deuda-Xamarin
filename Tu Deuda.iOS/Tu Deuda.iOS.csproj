@@ -143,6 +143,9 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>
+    <PackageReference Include="Plugin.FirebasePushNotification">
+      <Version>3.4.35</Version>
+    </PackageReference>
     <PackageReference Include="supabase-csharp">
       <Version>0.9.1</Version>
     </PackageReference>
