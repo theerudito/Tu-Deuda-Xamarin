@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Content.PM;
+using Android.Gms.Ads;
 using Android.Gms.Common;
 using Android.OS;
 using Android.Runtime;
@@ -14,6 +15,8 @@ namespace Tu_Deuda.Droid
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
+            MobileAds.Initialize(ApplicationContext);
 
             FirebasePushNotificationManager.ProcessIntent(this, Intent);
 
