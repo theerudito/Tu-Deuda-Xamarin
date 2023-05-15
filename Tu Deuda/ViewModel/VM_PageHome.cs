@@ -1,5 +1,6 @@
 ﻿using Firebase.Database;
 using Firebase.Database.Query;
+using MarcTron.Plugin;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Supabase;
@@ -665,6 +666,8 @@ namespace Tu_Deuda.ViewModel
 
         public void OpenConfiguration()
         {
+            ShowIntertical();
+
             Navigation.PushAsync(new Config());
         }
 
@@ -712,6 +715,17 @@ namespace Tu_Deuda.ViewModel
             AddClientLabel = en.AddClient = "Add Client";
             SearchClient = en.SearchClient = "Search Client";
             Flag = ImageSource.FromFile("flag_ES.png");
+        }
+
+        public void ShowIntertical()
+        {
+            var interticalID = "ca-app-pub-7633493507240683/5796970515";
+            CrossMTAdmob.Current.LoadInterstitial(interticalID);
+        }
+        public void ShowVideoIntersical()
+        {
+            var interticalVideoID = "ca-app-pub-7633493507240683/5796970515";
+            CrossMTAdmob.Current.LoadRewardedVideo(interticalVideoID);
         }
 
         #endregion METHOD
