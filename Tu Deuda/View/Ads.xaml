@@ -7,11 +7,10 @@
     <ContentView.Content>
         <StackLayout
             HeightRequest="60"
-            HorizontalOptions="Center"
             IsEnabled="True"
             IsVisible="True">
             <controls:MTAdView
-                AdsId="ca-app-pub-7633493507240683/2543325055"
+                AdsId="ca-app-pub-7633493507240683/1495489773"
                 HeightRequest="60"
                 IsEnabled="True"
                 IsVisible="True" />

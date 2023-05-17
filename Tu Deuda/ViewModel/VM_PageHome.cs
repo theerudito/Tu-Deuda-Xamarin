@@ -668,7 +668,14 @@ namespace Tu_Deuda.ViewModel
         {
             ShowIntertical();
 
-            Navigation.PushAsync(new Config());
+            // Verificar si el anuncio está listo para mostrarse
+            if (CrossMTAdmob.Current.IsInterstitialLoaded())
+            {
+                // Mostrar el anuncio intersticial
+                CrossMTAdmob.Current.ShowInterstitial();
+
+                Navigation.PushAsync(new Config());
+            }
         }
 
         public void Change_Language()
@@ -719,12 +726,14 @@ namespace Tu_Deuda.ViewModel
 
         public void ShowIntertical()
         {
-            var interticalID = "ca-app-pub-7633493507240683/5796970515";
+            var interticalID = "ca-app-pub-7633493507240683/8015778047";
+
             CrossMTAdmob.Current.LoadInterstitial(interticalID);
         }
+
         public void ShowVideoIntersical()
         {
-            var interticalVideoID = "ca-app-pub-7633493507240683/5796970515";
+            var interticalVideoID = "ca-app-pub-7633493507240683/8015778047";
             CrossMTAdmob.Current.LoadRewardedVideo(interticalVideoID);
         }
 
