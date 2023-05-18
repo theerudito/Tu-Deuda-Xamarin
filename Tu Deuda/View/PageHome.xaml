@@ -146,7 +146,7 @@
                                                         Grid.Row="0"
                                                         Grid.Column="0"
                                                         MaxLines="1"
-                                                        Text="Nombre"
+                                                        Text="Name:"
                                                         TextColor="White" />
                                                     <Label
                                                         Grid.Row="0"
@@ -158,7 +158,7 @@
                                                         Grid.Row="1"
                                                         Grid.Column="0"
                                                         MaxLines="1"
-                                                        Text="Deuda:"
+                                                        Text="Value:"
                                                         TextColor="White" />
                                                     <Label
                                                         Grid.Row="1"
@@ -196,7 +196,6 @@
                 <StackLayout Grid.Row="4" Grid.Column="0">
                     <anuncio:Ads />
                 </StackLayout>
-
             </Grid>
         </StackLayout>
     </ContentPage.Content>

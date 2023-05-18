@@ -15,9 +15,9 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Tu_Deuda.ApplicationDB;
 using Tu_Deuda.Data;
+using Tu_Deuda.Helpers;
 using Tu_Deuda.Model;
 using Tu_Deuda.View;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Tu_Deuda.ViewModel
@@ -25,26 +25,27 @@ namespace Tu_Deuda.ViewModel
     public class VM_PageHome : BaseVM
     {
         private Application_Context _dbContext = new Application_Context();
-        private Language language = new Language();
+
         public Command LoadItemsCommand { get; }
 
         public VM_PageHome(INavigation navigation)
         {
             Navigation = navigation;
 
+            Language = LocalStorange.GetStorange("language");
+
+            if (Language == "EN")
+            {
+                Change_Language();
+            }
+            else
+            {
+                Change_Language();
+            }
+
             Task.Run(async () => await GetDataBase());
 
             Task.Run(async () => await Load_Data());
-
-            TextLanguage = "ES";
-            SecureStorage.SetAsync("LANGUAGE", TextLanguage);
-
-            var lang = SecureStorage.GetAsync("LANGUAGE").Result;
-
-            if (lang != null)
-            {
-                Language_ES();
-            }
 
             LoadItemsCommand = new Command(async () => await Load_Data());
         }
@@ -53,7 +54,7 @@ namespace Tu_Deuda.ViewModel
 
         private static string _hour = DateTime.Now.ToString("HH:mm");
         private static string _date = DateTime.Now.ToString("dd/MM/yyyy");
-        private string _dateNow = $"Fecha {_date} - Hour {_hour} ";
+        private string _dateNow = "Fecha" + ": " + _date + "- " + "Hora" + ": " + _hour;
         private string _nameClient;
         private float _saldoInicial;
         private string _descripcionClient;
@@ -123,7 +124,7 @@ namespace Tu_Deuda.ViewModel
             }
         }
 
-        public string TextLanguage
+        public string Language
         {
             get { return _language; }
             set
@@ -141,8 +142,8 @@ namespace Tu_Deuda.ViewModel
         public string _addClientLabel;
         public string _searchClientLabel;
         public string _credit;
-        private static string hour;
-        private static string _fecha;
+        private string hour_;
+        private string fecha_;
 
         // DATABASE CONFIG
         private static string fetchData;
@@ -180,7 +181,7 @@ namespace Tu_Deuda.ViewModel
             }
         }
 
-        // DATABASE CONFIG
+        // LANGUAGE
 
         public string NameLabel
         {
@@ -242,24 +243,16 @@ namespace Tu_Deuda.ViewModel
             }
         }
 
-        public string Date
+        public string LabelDate
         {
-            get { return _fecha; }
-            set
-            {
-                SetValue(ref _fecha, value);
-                OnPropertyChanged();
-            }
+            get { return fecha_; }
+            set { SetValue(ref fecha_, value); }
         }
 
-        public string Hour
+        public string LabelHour
         {
-            get { return hour; }
-            set
-            {
-                SetValue(ref hour, value);
-                OnPropertyChanged();
-            }
+            get { return hour_; }
+            set { SetValue(ref hour_, value); }
         }
 
         #endregion Language
@@ -281,7 +274,7 @@ namespace Tu_Deuda.ViewModel
             var queryDatabase = _dbContext.DBApp.Find(1);
             if (queryDatabase == null)
             {
-                await DisplayAlert("Alert", "You must configure the database", "OK");
+                await AlertConfigureDatabase();
                 return;
             }
             else
@@ -315,7 +308,7 @@ namespace Tu_Deuda.ViewModel
                         break;
 
                     default:
-                        await DisplayAlert("Alert", "You must configure the database", "OK");
+                        await AlertConfigureDatabase();
                         break;
                 }
             }
@@ -327,7 +320,7 @@ namespace Tu_Deuda.ViewModel
 
             if (searchName.Count() > 0)
             {
-                await DisplayAlert("info", "Ya Existe Un Registro Con Este Nombre", "ok");
+                await AlertExistRecord();
             }
             else
             {
@@ -337,8 +330,7 @@ namespace Tu_Deuda.ViewModel
 
                 await _dbContext.SaveChangesAsync();
 
-                await DisplayAlert("info", "Dato Guargado Con Exito", "ok");
-
+                await AlertShow();
                 await Load_Data();
 
                 ResetField();
@@ -356,7 +348,7 @@ namespace Tu_Deuda.ViewModel
 
             var newClient = new MClientSupabase { Name = TextName.ToUpper().Trim(), Saldo_Inicial = TextValor, Description = TextDescription, Status = _status, Fecha = _dateNow };
             await supabase.From<MClientSupabase>().Insert(newClient);
-            await DisplayAlert("Alert", "Added Successfully", "OK");
+            await AlertShow();
             ResetField();
             await Load_Data();
         }
@@ -374,7 +366,7 @@ namespace Tu_Deuda.ViewModel
                 Fecha = _dateNow
             });
 
-            await DisplayAlert("Alert", "Added Successfully", "OK");
+            await AlertShow();
             ResetField();
             await Load_Data();
         }
@@ -391,9 +383,57 @@ namespace Tu_Deuda.ViewModel
 
             await client.PostAsync(Connections.urlWebApi() + "/api/ControllerClient", content);
 
-            await DisplayAlert("Alert", "Added Successfully", "OK");
+            await AlertShow();
             ResetField();
             await Load_Data();
+        }
+
+        public async Task AlertShow()
+        {
+            if (Language == "EN")
+            {
+                await Alerts.ShowAlert("Alert", "Added Successfulle", "OK");
+            }
+            else
+            {
+                await Alerts.ShowAlert("Alerta", "Agregado Con Exito", "OK");
+            }
+        }
+
+        public async Task AlertExistRecord()
+        {
+            if (Language == "EN")
+            {
+                await Alerts.ShowAlert("Alert", "There is already a record with this name", "OK");
+            }
+            else
+            {
+                await Alerts.ShowAlert("Alerta", "Ya Existe Un Registro Con Este Nombre", "OK");
+            }
+        }
+
+        public async Task AlertConfigureDatabase()
+        {
+            if (Language == "EN")
+            {
+                await Alerts.ShowAlert("Alert", "You must configure the database", "OK");
+            }
+            else
+            {
+                await Alerts.ShowAlert("Alerta", "Debes configurar la base de datos", "OK");
+            }
+        }
+
+        public async Task AlertNoResult()
+        {
+            if (Language == "EN")
+            {
+                await Alerts.ShowAlert("Alert", "No results found", "OK");
+            }
+            else
+            {
+                await Alerts.ShowAlert("Alerta", "No se encontraron resultados", "OK");
+            }
         }
 
         public async Task Go_Details(MClient client)
@@ -425,7 +465,7 @@ namespace Tu_Deuda.ViewModel
                         break;
 
                     default:
-                        await DisplayAlert("Alert", "You must configure the database", "OK");
+                        await AlertConfigureDatabase();
                         break;
                 }
             }
@@ -533,7 +573,14 @@ namespace Tu_Deuda.ViewModel
             }
             else
             {
-                await DisplayAlert("Alert", "Error al Conectar con la API o Sin Internet", "OK");
+                if (Language == "EN")
+                {
+                    await DisplayAlert("Alert", "Error connecting to the API or No Internet", "OK");
+                }
+                else
+                {
+                    await DisplayAlert("Alert", "Error al Conectar con la API o Sin Internet", "OK");
+                }
             }
         }
 
@@ -556,6 +603,10 @@ namespace Tu_Deuda.ViewModel
                 case "Web":
                     await LoadOneClientWeb();
                     break;
+
+                default:
+                    await AlertConfigureDatabase();
+                    break;
             }
         }
 
@@ -567,7 +618,7 @@ namespace Tu_Deuda.ViewModel
 
             if (searchingOneClient == null)
             {
-                await DisplayAlert("info", "No se encontraron resultados", "OK");
+                await AlertNoResult();
             }
             else
             {
@@ -583,7 +634,7 @@ namespace Tu_Deuda.ViewModel
 
             if (searchingOneClient == null)
             {
-                await DisplayAlert("info", "No se encontraron resultados", "OK");
+                await AlertNoResult();
             }
             else
             {
@@ -599,7 +650,7 @@ namespace Tu_Deuda.ViewModel
 
             if (searchingOneClient == null)
             {
-                await DisplayAlert("info", "No se encontraron resultados", "OK");
+                await AlertNoResult();
             }
             else
             {
@@ -626,7 +677,7 @@ namespace Tu_Deuda.ViewModel
 
             if (searchingOneClient == null)
             {
-                await DisplayAlert("info", "No se encontraron resultados", "OK");
+                await AlertNoResult();
             }
             else
             {
@@ -645,17 +696,41 @@ namespace Tu_Deuda.ViewModel
         {
             if (string.IsNullOrEmpty(TextName))
             {
-                DisplayAlert("Error", "Debes ingresar un nombre", "Ok");
+                if (Language == "EN")
+                {
+                    DisplayAlert("Error", "You must enter a name", "Ok");
+                }
+                else
+                {
+                    DisplayAlert("Error", "Debes ingresar un nombre", "Ok");
+                }
+
                 return false;
             }
             else if (TextValor == 0)
             {
-                DisplayAlert("Error", "Debes ingresar un valor", "Ok");
+                if (Language == "EN")
+                {
+                    DisplayAlert("Error", "You must enter a value", "Ok");
+                }
+                else
+                {
+                    DisplayAlert("Error", "Debes ingresar un valor", "Ok");
+                }
+
                 return false;
             }
             else if (string.IsNullOrEmpty(TextDescription))
             {
-                DisplayAlert("Error", "Debes ingresar una descripcion", "Ok");
+                if (Language == "EN")
+                {
+                    DisplayAlert("Error", "You must enter a description", "Ok");
+                }
+                else
+                {
+                    DisplayAlert("Error", "Debes ingresar una descripcion", "Ok");
+                }
+
                 return false;
             }
             else
@@ -664,67 +739,91 @@ namespace Tu_Deuda.ViewModel
             }
         }
 
-        public void OpenConfiguration()
+        public async Task OpenConfiguration()
         {
-            ShowIntertical();
+            var internet = ValidationInternet.IsConnected();
 
-            // Verificar si el anuncio está listo para mostrarse
-            if (CrossMTAdmob.Current.IsInterstitialLoaded())
+            if (internet)
             {
-                // Mostrar el anuncio intersticial
-                CrossMTAdmob.Current.ShowInterstitial();
+                await ShowIntertical();
 
-                Navigation.PushAsync(new Config());
+                if (CrossMTAdmob.Current.IsInterstitialLoaded())
+                {
+                    CrossMTAdmob.Current.ShowInterstitial();
+                }
+                else
+                {
+                    if (Language == "EN")
+                    {
+                        await DisplayAlert("Error", "The ad is not ready yet", "Ok");
+                        await Navigation.PushAsync(new Config());
+                    }
+                    else
+                    {
+                        await DisplayAlert("Error", "El anuncio aún no está listo", "Ok");
+                        await Navigation.PushAsync(new Config());
+                    }
+                }
+
+            }
+            else
+            {
+                if (Language == "EN")
+                {
+                    await Navigation.PushAsync(new Config());
+                }
+                else
+                {
+                    await Navigation.PushAsync(new Config());
+                }
             }
         }
 
         public void Change_Language()
         {
-            var lang = SecureStorage.GetAsync("LANGUAGE").Result;
+            Language = LocalStorange.GetStorange("language");
 
-            if (lang == TextLanguage)
+            if (Language == "EN")
             {
-                SecureStorage.SetAsync("LANGUAGE", TextLanguage);
-                Language_ES();
+                LocalStorange.SetStorange("language", "ES");
+                Language_Select();
             }
             else
             {
-                SecureStorage.SetAsync("LANGUAGE", TextLanguage);
-                Language_EN();
+                LocalStorange.SetStorange("language", "EN");
+                Language_Select();
             }
         }
 
-        public void Language_ES()
+        public void Language_Select()
         {
-            var es = new Language();
-            TextLanguage = "ES";
-            NameLabel = es.Name = "Nombre:";
-            ValueLabel = es.Value = "Valor:";
-            Credit = es.Credit = "Deuda:";
-            Date = es.Date = "Fecha:";
-            Hour = es.Hour = "Hora:";
-            DescriptionLabel = es.Description = "Descripcion:";
-            AddClientLabel = es.AddClient = "Añadir Cliente";
-            SearchClient = es.SearchClient = "Buscar Cliente";
-            Flag = ImageSource.FromFile("flag_EN.png");
+            if (Language == "EN")
+            {
+                NameLabel = LanguageApp._nameTextEN;
+                ValueLabel = LanguageApp._valueTextEN;
+                Credit = "Deuda:";
+                LabelDate = LanguageApp._dateTextEN;
+                LabelHour = LanguageApp._hourTextEN;
+                DescriptionLabel = LanguageApp._descriptionTextEN;
+                AddClientLabel = LanguageApp._add_clientTextEN;
+                SearchClient = LanguageApp._seach_ClientTextEN;
+                Flag = ImageSource.FromFile("flag_EN.png");
+            }
+            else
+            {
+                NameLabel = LanguageApp._nameTextES;
+                ValueLabel = LanguageApp._valueTextES;
+                Credit = "Deuda:";
+                LabelDate = LanguageApp._dateTextES;
+                LabelHour = LanguageApp._hourTextES;
+                DescriptionLabel = LanguageApp._descriptionTextES;
+                AddClientLabel = LanguageApp._add_clientTextES;
+                SearchClient = LanguageApp._seach_ClientTextES;
+                Flag = ImageSource.FromFile("flag_ES.png");
+            }
         }
 
-        public void Language_EN()
-        {
-            var en = new Language();
-            TextLanguage = "EN";
-            NameLabel = en.Name = "Name:";
-            ValueLabel = en.Value = "Value:";
-            Credit = en.Credit = "Saldo:";
-            Date = en.Date = "Date:";
-            Hour = en.Hour = "Hour:";
-            DescriptionLabel = en.Description = "Description:";
-            AddClientLabel = en.AddClient = "Add Client";
-            SearchClient = en.SearchClient = "Search Client";
-            Flag = ImageSource.FromFile("flag_ES.png");
-        }
-
-        public void ShowIntertical()
+        public async Task ShowIntertical()
         {
             var interticalID = "ca-app-pub-7633493507240683/8015778047";
 
@@ -745,7 +844,7 @@ namespace Tu_Deuda.ViewModel
         public ICommand btn_goDetail => new Command<MClient>(async (cli) => await Go_Details(cli));
         public ICommand btnSearchOneClient => new Command(async () => await getOneClient());
         public ICommand btnLanguage => new Command(Change_Language);
-        public ICommand btnConfig => new Command(OpenConfiguration);
+        public ICommand btnConfig => new Command(async () => await OpenConfiguration());
 
         #endregion COMMAND
     }
