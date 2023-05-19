@@ -34,8 +34,8 @@ namespace Tu_Deuda.ViewModel
 
             Language = LocalStorange.GetStorange("language");
 
-            if (Language == "EN") Change_Language();
-            else Change_Language();
+            if (Language == "EN") Language_Select();
+            else Language_Select();
 
             Task.Run(async () => await GetDataBase());
 
@@ -744,31 +744,20 @@ namespace Tu_Deuda.ViewModel
                 if (CrossMTAdmob.Current.IsInterstitialLoaded())
                 {
                     CrossMTAdmob.Current.ShowInterstitial();
+                    await Navigation.PushAsync(new Config());
                 }
                 else
                 {
                     if (Language == "EN")
-                    {
-                        await DisplayAlert("Error", "The ad is not ready yet", "Ok");
-                        await Navigation.PushAsync(new Config());
-                    }
-                    else
-                    {
-                        await DisplayAlert("Error", "El anuncio aún no está listo", "Ok");
-                        await Navigation.PushAsync(new Config());
-                    }
+                        await Alerts.ShowAlert("Alert", "The ad is not ready yet", "Ok");
+                    await Alerts.ShowAlert("Alert", "El anuncio aún no está listo", "Ok");
                 }
             }
             else
             {
                 if (Language == "EN")
-                {
                     await Navigation.PushAsync(new Config());
-                }
-                else
-                {
-                    await Navigation.PushAsync(new Config());
-                }
+                await Navigation.PushAsync(new Config());
             }
         }
 
@@ -776,20 +765,21 @@ namespace Tu_Deuda.ViewModel
         {
             if (Language == "EN")
             {
-                // Flag = ImageSource.FromFile("flag_EN.png");
+                Flag = ImageSource.FromFile("flag_EN.png");
+                LocalStorange.SetStorange("language", "ES");
                 Language_Select();
             }
             else
             {
-                //Flag = ImageSource.FromFile("flag_ES.png");
+                Flag = ImageSource.FromFile("flag_ES.png");
+                LocalStorange.SetStorange("language", "EN");
                 Language_Select();
             }
         }
 
         public void Language_Select()
         {
-            DisplayAlert("Alert", Language, "Ok");
-
+            Language = LocalStorange.GetStorange("language");
             if (Language == "EN")
             {
                 NameLabel = LanguageApp._nameTextEN;
@@ -801,7 +791,6 @@ namespace Tu_Deuda.ViewModel
                 AddClientLabel = LanguageApp._add_clientTextEN;
                 SearchClient = LanguageApp._seach_ClientTextEN;
                 Flag = ImageSource.FromFile("flag_ES.png");
-                LocalStorange.SetStorange("language", "EN");
             }
             else
             {
@@ -814,7 +803,6 @@ namespace Tu_Deuda.ViewModel
                 AddClientLabel = LanguageApp._add_clientTextES;
                 SearchClient = LanguageApp._seach_ClientTextES;
                 Flag = ImageSource.FromFile("flag_EN.png");
-                LocalStorange.SetStorange("language", "ES");
             }
         }
 
