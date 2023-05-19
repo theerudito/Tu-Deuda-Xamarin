@@ -34,14 +34,8 @@ namespace Tu_Deuda.ViewModel
 
             Language = LocalStorange.GetStorange("language");
 
-            if (Language == "EN")
-            {
-                Change_Language();
-            }
-            else
-            {
-                Change_Language();
-            }
+            if (Language == "EN") Change_Language();
+            else Change_Language();
 
             Task.Run(async () => await GetDataBase());
 
@@ -392,7 +386,7 @@ namespace Tu_Deuda.ViewModel
         {
             if (Language == "EN")
             {
-                await Alerts.ShowAlert("Alert", "Added Successfulle", "OK");
+                await Alerts.ShowAlert("Alert", "Added Successfully", "OK");
             }
             else
             {

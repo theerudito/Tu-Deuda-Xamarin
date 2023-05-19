@@ -22,7 +22,6 @@ namespace Tu_Deuda.ViewModel
 
         public VM_Details(INavigation navigation, MClient client)
         {
-
             LanguageUI = LocalStorange.GetStorange("language");
 
             if (LanguageUI == "EN")
@@ -33,9 +32,6 @@ namespace Tu_Deuda.ViewModel
             {
                 LoadLanguage();
             }
-
-
-
 
             receivedClient = client;
             Navigation = navigation;
@@ -663,7 +659,9 @@ namespace Tu_Deuda.ViewModel
 
         public async Task Delete_Credito()
         {
-            if (await DisplayAlert("info", "Estas Seguro de querer Reseter sus Valores a 0", "yes", "no"))
+
+            if (LanguageUI == "EN" ? await DisplayAlert("Alert", "Are you sure you want to delete this credit?", "Yes", "No") :
+                await DisplayAlert("Alerta", "¿Estas seguro de eliminar este credito?", "Si", "No"))
             {
                 switch (FetchData)
                 {
@@ -684,7 +682,14 @@ namespace Tu_Deuda.ViewModel
                         break;
 
                     default:
-                        await DisplayAlert("Alert", "You must configure the database", "OK");
+                        if (LanguageUI == "EN")
+                        {
+                            await Alerts.ShowAlert("Error", "You must configure the database", "ok");
+                        }
+                        else
+                        {
+                            await Alerts.ShowAlert("Error", "Debes Configurar la Base de Datos", "ok");
+                        }
                         break;
                 }
             }
@@ -702,7 +707,7 @@ namespace Tu_Deuda.ViewModel
 
             await _dbContext.SaveChangesAsync();
 
-            await DisplayAlert("info", "Listo Ya No Tienes Deuda", "ok");
+            await AlertPaymend();
 
             Color = "Black";
             Load_Data();
@@ -710,7 +715,7 @@ namespace Tu_Deuda.ViewModel
 
         public async Task DeleteSupabase()
         {
-            await DisplayAlert("info", "Listo Ya No Tienes Deuda", "ok");
+            await AlertPaymend();
 
             Color = "Black";
             Load_Data();
@@ -731,7 +736,7 @@ namespace Tu_Deuda.ViewModel
                 .Child(receivedClient.ClientId)
                 .PutAsync(receivedClient);
 
-            await DisplayAlert("info", "Listo Ya No Tienes Deuda", "ok");
+            await AlertPaymend();
             Color = "Black";
             Load_Data();
         }
@@ -744,13 +749,39 @@ namespace Tu_Deuda.ViewModel
 
             if (deleteDeuda.IsSuccessStatusCode)
             {
-                await DisplayAlert("info", "Listo Ya No Tienes Deuda", "ok");
+                await AlertPaymend();
                 Color = "Black";
                 Load_Data();
             }
             else
             {
-                await DisplayAlert("info", "Error al Eliminar", "ok");
+                await AlertError();
+            }
+        }
+
+
+
+        public async Task AlertPaymend()
+        {
+            if (LanguageUI == "EN")
+            {
+                await Alerts.ShowAlert("info", "Done You Have No Debt", "ok");
+            }
+            else
+            {
+                await Alerts.ShowAlert("info", "Listo Ya No Tienes Deuda", "ok");
+            }
+        }
+
+        public async Task AlertError()
+        {
+            if (LanguageUI == "EN")
+            {
+                await Alerts.ShowAlert("Error", "Error to Delete", "ok");
+            }
+            else
+            {
+                await Alerts.ShowAlert("Error", "Error al Eliminar", "ok");
             }
         }
 
