@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Tu_Deuda.ApplicationDB;
+using Tu_Deuda.Helpers;
 using Xamarin.Forms;
 
 namespace Tu_Deuda.ViewModel
@@ -11,9 +12,20 @@ namespace Tu_Deuda.ViewModel
     {
         public VM_Config(INavigation navigation)
         {
+            Language = LocalStorange.GetStorange("language");
+
             Navigation = navigation;
 
             BtnSaveConfig = false;
+
+            if (Language == "EN")
+            {
+                LoadLanguage();
+            }
+            else
+            {
+                LoadLanguage();
+            }
 
             getConfig();
 
@@ -102,6 +114,51 @@ namespace Tu_Deuda.ViewModel
 
         #endregion Objects
 
+
+        #region Language
+        private string _pickerTitle;
+        private string _placeholderUrl;
+        private string _placeholderKey;
+        private string _entryCode;
+        private string _textBtnSave;
+        private string _language;
+
+        public string PickerTitle
+        {
+            get { return _pickerTitle; }
+            set { SetProperty(ref _pickerTitle, value); }
+        }
+
+        public string PlaceholderUrl
+        {
+            get { return _placeholderUrl; }
+            set { SetProperty(ref _placeholderUrl, value); }
+        }
+
+        public string PlaceholderKey
+        {
+            get { return _placeholderKey; }
+            set { SetProperty(ref _placeholderKey, value); }
+        }
+
+        public string EntryCode
+        {
+            get { return _entryCode; }
+            set { SetProperty(ref _entryCode, value); }
+        }
+
+        public string TextBtnSave
+        {
+            get { return _textBtnSave; }
+            set { SetProperty(ref _textBtnSave, value); }
+        }
+        public string Language
+        {
+            get { return _language; }
+            set { SetProperty(ref _language, value); }
+        }
+        #endregion Language
+
         #region Metthods
 
         public async Task getConfig()
@@ -155,11 +212,38 @@ namespace Tu_Deuda.ViewModel
                 searchDatabase.KeyProyect = KeyProyect;
                 _dbCcontext.Update(searchDatabase);
                 await _dbCcontext.SaveChangesAsync();
-
-                await DisplayAlert("info", "Updated Successfully", "ok");
-
                 BtnSaveConfig = false;
+
+                if (Language == "EN")
+                {
+                    await Alerts.ShowAlert("info", "Updated Successfully", "ok");
+                }
+                else
+                {
+                    await Alerts.ShowAlert("info", "Actualizado Correctamente", "ok");
+                }
             }
+        }
+
+        public void LoadLanguage()
+        {
+            if (Language == "EN")
+            {
+                PickerTitle = LanguageApp._selectDataBaseEN;
+                PlaceholderUrl = LanguageApp._entryUrlProyectEN;
+                PlaceholderKey = LanguageApp._entryKeyProyectEN;
+                EntryCode = LanguageApp._entryCodePlaceholderEN;
+                TextBtnSave = LanguageApp._btnTextEN;
+            }
+            else
+            {
+                PickerTitle = LanguageApp._selectDataBaseES;
+                PlaceholderUrl = LanguageApp._entryUrlProyectES;
+                PlaceholderKey = LanguageApp._entryKeyProyectES;
+                EntryCode = LanguageApp._entryCodePlaceholderES;
+                TextBtnSave = LanguageApp._btnTextES;
+            }
+
         }
 
         public async Task MyCode()
@@ -170,13 +254,29 @@ namespace Tu_Deuda.ViewModel
 
             if (queryCode != null)
             {
-                await DisplayAlert("info", "Code Correct", "ok");
-                BtnSaveConfig = true;
-                CodeAdmin = 0;
+                if (Language == "EN")
+                {
+                    await Alerts.ShowAlert("info", "Code Correct", "ok");
+                    BtnSaveConfig = true;
+                    CodeAdmin = 0;
+                }
+                else
+                {
+                    await Alerts.ShowAlert("info", "Codigo Correcto", "ok");
+                    BtnSaveConfig = true;
+                    CodeAdmin = 0;
+                }
             }
             else
             {
-                await DisplayAlert("info", "Code Incorrect", "ok");
+                if (Language == "EN")
+                {
+                    await Alerts.ShowAlert("info", "Code Incorrect", "ok");
+                }
+                else
+                {
+                    await Alerts.ShowAlert("info", "Codigo Incorrecto", "ok");
+                }
             }
         }
 

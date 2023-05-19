@@ -21,28 +21,34 @@
         // PAGE HOME
 
         // PAGE DETAILS
-        public static readonly string _valueBeforeLabelEN = "Value Before";
+        public static readonly string _valuePreviousEN = "Value Before";
 
-        public static readonly string _valueCurrentLabelEN = "Value Current";
+        public static readonly string _valueCurrentEN = "Value Current:";
         public static readonly string _resultFinalLabelEN = "RESULT FINAL";
         public static readonly string _descriptionPlaceholderEN = "Enter a new Description";
-        public static readonly string _newValueLabelEN = "NEW VALUE";
+        public static readonly string _newValueLabelEN = "NEW VALUE:";
         public static readonly string _typeTransactionEN = "TYPE TRANSACTION";
         public static readonly string _delectPickerEN = "SELECT TYPE OF TRANSACTION";
         public static readonly string _debitEN = "DEBIT";
         public static readonly string _creditEN = "CREDIT";
         public static readonly string _btnTextEN = "SAVE";
+        public static readonly string _valueEN = "Enter a Value";
+        public static readonly string _labelDescriptionEN = "DESCRIPTION";
+        public static readonly string _labelNameEN = "NAME";
 
-        public static readonly string _valueBeforeLabelES = "Valor Anterior";
-        public static readonly string _valueCurrentLabelES = "Valor Actual";
+        public static readonly string _valuePreviousES = "Valor Anterior:";
+        public static readonly string _valueCurrentES = "Valor Actual:";
         public static readonly string _resultFinalLabelES = "RESULTADO FINAL";
         public static readonly string _descriptionPlaceholderES = "Ingrese una nueva Descripcion";
-        public static readonly string _newValueLabelES = "NUEVO VALOR";
+        public static readonly string _newValueLabelES = "NUEVO VALOR:";
         public static readonly string _typeTransactionES = "TIPO DE TRANSACION";
         public static readonly string _delectPickerES = "SELECIONE EL TIPO DE TRANSACION";
         public static readonly string _debitES = "DEBITO";
         public static readonly string _creditES = "CREDITO";
         public static readonly string _btnTextES = "GUARDAR";
+        public static readonly string _valueES = "Ingrese un Valor";
+        public static readonly string _labelDescriptionES = "DESCRIPCION";
+        public static readonly string _labelNameES = "NOMBRE";
 
         // PAGE DETAILS
 

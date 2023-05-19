@@ -52,7 +52,7 @@
                         <Label
                             Grid.Row="0"
                             Grid.Column="0"
-                            Text="Valor Anterior:" />
+                            Text="{Binding LabelPreviousValue}" />
                         <Label
                             Grid.Row="0"
                             Grid.Column="1"
@@ -61,7 +61,7 @@
                         <Label
                             Grid.Row="0"
                             Grid.Column="2"
-                            Text="Valor Actual:" />
+                            Text="{Binding LabelCurrentValue}" />
                         <Label
                             Grid.Row="0"
                             Grid.Column="3"
@@ -80,7 +80,7 @@
                                 Margin="0,2,0,0"
                                 FontAttributes="Bold"
                                 HorizontalOptions="Center"
-                                Text="RESULTADO FINAL"
+                                Text="{Binding LabelResultFinal}"
                                 TextColor="White" />
                         </StackLayout>
 
@@ -104,7 +104,7 @@
                                 Margin="5,0,0,0"
                                 FontAttributes="Bold"
                                 HorizontalOptions="Center"
-                                Text="NOMBRE:"
+                                Text="{Binding LabelName}"
                                 TextColor="White" />
                         </StackLayout>
 
@@ -126,7 +126,7 @@
                                 Margin="5,0,0,0"
                                 FontAttributes="Bold"
                                 HorizontalOptions="Center"
-                                Text="DESCRIPCION:"
+                                Text="{Binding LabelDescription}"
                                 TextColor="White" />
                         </StackLayout>
                         <ScrollView Grid.Row="1" Grid.Column="0">
@@ -148,7 +148,7 @@
                                 Grid.Column="0"
                                 Margin="0,-15,0,0"
                                 Keyboard="Text"
-                                Placeholder="Ingresa una nueva Descripcion..."
+                                Placeholder="{Binding PlaceholderDescription}"
                                 Text="{Binding TextDescription}" />
                         </Frame>
                     </Grid>
@@ -161,7 +161,7 @@
                             Grid.Column="0"
                             Margin="5,0,0,0"
                             FontAttributes="Bold"
-                            Text="NUEVO VALOR:"
+                            Text="{Binding LabelNewValue}"
                             VerticalOptions="Center" />
                         <Frame
                             Grid.Row="0"
@@ -176,7 +176,7 @@
                             <Entry
                                 Margin="0,-20,0,0"
                                 Keyboard="Numeric"
-                                Placeholder="Ingresa un Valor"
+                                Placeholder="{Binding PlaceholderValue}"
                                 Text="{Binding TextAbono}" />
                         </Frame>
                     </Grid>
@@ -191,7 +191,7 @@
                                 Margin="5,0,0,0"
                                 FontAttributes="Bold"
                                 HorizontalOptions="Center"
-                                Text="TIPO DE TRANSACION:"
+                                Text="{Binding LabelType}"
                                 TextColor="White" />
                         </StackLayout>
 
@@ -205,7 +205,7 @@
                             CornerRadius="5"
                             HasShadow="True">
                             <Picker
-                                Title="Seleciona El Tipo"
+                                Title="{Binding PickerInfor}"
                                 HorizontalOptions="Center"
                                 ItemsSource="{Binding SelectType}"
                                 SelectedItem="{Binding SelectType}"
@@ -225,7 +225,7 @@
                         Background="#2E3192"
                         Command="{Binding btnSave_Data}"
                         CornerRadius="5"
-                        Text="GUARDAR"
+                        Text="{Binding TextBtnSave}"
                         TextColor="White" />
                 </StackLayout>
             </Grid>

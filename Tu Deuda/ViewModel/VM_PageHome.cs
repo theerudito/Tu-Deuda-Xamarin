@@ -745,7 +745,7 @@ namespace Tu_Deuda.ViewModel
 
             if (internet)
             {
-                await ShowIntertical();
+                ShowIntertical();
 
                 if (CrossMTAdmob.Current.IsInterstitialLoaded())
                 {
@@ -764,7 +764,6 @@ namespace Tu_Deuda.ViewModel
                         await Navigation.PushAsync(new Config());
                     }
                 }
-
             }
             else
             {
@@ -781,22 +780,22 @@ namespace Tu_Deuda.ViewModel
 
         public void Change_Language()
         {
-            Language = LocalStorange.GetStorange("language");
-
             if (Language == "EN")
             {
-                LocalStorange.SetStorange("language", "ES");
+                // Flag = ImageSource.FromFile("flag_EN.png");
                 Language_Select();
             }
             else
             {
-                LocalStorange.SetStorange("language", "EN");
+                //Flag = ImageSource.FromFile("flag_ES.png");
                 Language_Select();
             }
         }
 
         public void Language_Select()
         {
+            DisplayAlert("Alert", Language, "Ok");
+
             if (Language == "EN")
             {
                 NameLabel = LanguageApp._nameTextEN;
@@ -807,7 +806,8 @@ namespace Tu_Deuda.ViewModel
                 DescriptionLabel = LanguageApp._descriptionTextEN;
                 AddClientLabel = LanguageApp._add_clientTextEN;
                 SearchClient = LanguageApp._seach_ClientTextEN;
-                Flag = ImageSource.FromFile("flag_EN.png");
+                Flag = ImageSource.FromFile("flag_ES.png");
+                LocalStorange.SetStorange("language", "EN");
             }
             else
             {
@@ -819,11 +819,12 @@ namespace Tu_Deuda.ViewModel
                 DescriptionLabel = LanguageApp._descriptionTextES;
                 AddClientLabel = LanguageApp._add_clientTextES;
                 SearchClient = LanguageApp._seach_ClientTextES;
-                Flag = ImageSource.FromFile("flag_ES.png");
+                Flag = ImageSource.FromFile("flag_EN.png");
+                LocalStorange.SetStorange("language", "ES");
             }
         }
 
-        public async Task ShowIntertical()
+        public void ShowIntertical()
         {
             var interticalID = "ca-app-pub-7633493507240683/8015778047";
 

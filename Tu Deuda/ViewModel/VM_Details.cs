@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Tu_Deuda.ApplicationDB;
 using Tu_Deuda.Data;
+using Tu_Deuda.Helpers;
 using Tu_Deuda.Model;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Tu_Deuda.ViewModel
@@ -22,13 +22,27 @@ namespace Tu_Deuda.ViewModel
 
         public VM_Details(INavigation navigation, MClient client)
         {
+
+            LanguageUI = LocalStorange.GetStorange("language");
+
+            if (LanguageUI == "EN")
+            {
+                LoadLanguage();
+            }
+            else
+            {
+                LoadLanguage();
+            }
+
+
+
+
             receivedClient = client;
             Navigation = navigation;
 
             Task.Run(async () => await GetDataBase());
-            Load_Data();
 
-            var lang = SecureStorage.GetAsync("LANGUAGE").Result;
+            Load_Data();
 
             Color = "Black";
         }
@@ -181,6 +195,214 @@ namespace Tu_Deuda.ViewModel
         }
 
         // DATABASE CONFIG
+
+        #region TRADUCTIONES
+
+        private string _languageUI;
+        private string _labelPreviousValue;
+        private string _labelCurrentValue;
+        private string _labelResultFinal;
+        private string _labelName;
+        private string _labelDescription;
+        private string _labelDate;
+        private string _labelType;
+        private string _labelCredit;
+        private string _labelDebit;
+        private string _textBtnSave;
+        private string _labelnewValue;
+        private string _placeholderDescription;
+        private string _placeholderValue;
+        private string _pickerInfor;
+
+        public string LanguageUI
+        {
+            get { return _languageUI; }
+            set
+            {
+                SetValue(ref _languageUI, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string LabelPreviousValue
+        {
+            get { return _labelPreviousValue; }
+            set
+            {
+                SetValue(ref _labelPreviousValue, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string LabelCurrentValue
+        {
+            get { return _labelCurrentValue; }
+            set
+            {
+                SetValue(ref _labelCurrentValue, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string LabelResultFinal
+        {
+            get { return _labelResultFinal; }
+            set
+            {
+                SetValue(ref _labelResultFinal, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string LabelName
+        {
+            get { return _labelName; }
+            set
+            {
+                SetValue(ref _labelName, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string LabelDescription
+        {
+            get { return _labelDescription; }
+            set
+            {
+                SetValue(ref _labelDescription, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string LabelDate
+        {
+            get { return _labelDate; }
+            set
+            {
+                SetValue(ref _labelDate, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string LabelType
+        {
+            get { return _labelType; }
+            set
+            {
+                SetValue(ref _labelType, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string LabelCredit
+        {
+            get { return _labelCredit; }
+            set
+            {
+                SetValue(ref _labelCredit, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string LabelDebit
+        {
+            get { return _labelDebit; }
+            set
+            {
+                SetValue(ref _labelDebit, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string TextBtnSave
+        {
+            get { return _textBtnSave; }
+            set
+            {
+                SetValue(ref _textBtnSave, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string LabelNewValue
+        {
+            get { return _labelnewValue; }
+            set
+            {
+                SetValue(ref _labelnewValue, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string PlaceholderDescription
+        {
+            get { return _placeholderDescription; }
+            set
+            {
+                SetValue(ref _placeholderDescription, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string PlaceholderValue
+        {
+            get { return _placeholderValue; }
+            set
+            {
+                SetValue(ref _placeholderValue, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string PickerInfor
+        {
+            get { return _pickerInfor; }
+            set
+            {
+                SetValue(ref _pickerInfor, value);
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion TRADUCTIONES
+
+        public void LoadLanguage()
+        {
+            if (LanguageUI == "EN")
+            {
+                LabelPreviousValue = LanguageApp._valuePreviousEN;
+                LabelCurrentValue = LanguageApp._valueCurrentEN;
+                LabelResultFinal = LanguageApp._resultFinalLabelEN;
+                LabelName = LanguageApp._labelNameEN;
+                LabelDescription = LanguageApp._labelDescriptionEN;
+                LabelDate = LanguageApp._dateTextEN;
+                LabelType = LanguageApp._typeTransactionEN;
+                LabelCredit = LanguageApp._creditEN;
+                LabelDebit = LanguageApp._debitEN;
+                TextBtnSave = LanguageApp._btnTextEN;
+                LabelNewValue = LanguageApp._newValueLabelEN;
+                PlaceholderDescription = LanguageApp._descriptionPlaceholderEN;
+                PlaceholderValue = LanguageApp._valueEN;
+                PickerInfor = LanguageApp._delectPickerEN;
+            }
+            else
+            {
+                LabelPreviousValue = LanguageApp._valuePreviousES;
+                LabelCurrentValue = LanguageApp._valueCurrentES;
+                LabelResultFinal = LanguageApp._resultFinalLabelES;
+                LabelName = LanguageApp._labelNameES;
+                LabelDescription = LanguageApp._labelDescriptionES;
+                LabelDate = LanguageApp._dateTextES;
+                LabelType = LanguageApp._typeTransactionES;
+                LabelCredit = LanguageApp._creditES;
+                LabelDebit = LanguageApp._debitES;
+                TextBtnSave = LanguageApp._btnTextES;
+                LabelNewValue = LanguageApp._newValueLabelES;
+                PlaceholderDescription = LanguageApp._descriptionPlaceholderES;
+                PlaceholderValue = LanguageApp._valueES;
+                PickerInfor = LanguageApp._delectPickerES;
+            }
+        }
 
         public void Load_Data()
         {

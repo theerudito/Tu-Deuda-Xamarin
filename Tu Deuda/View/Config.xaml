@@ -27,7 +27,7 @@
                     HasShadow="True"
                     IsVisible="True">
                     <Picker
-                        Title="Select DataBase"
+                        Title="{Binding PickerTitle}"
                         ItemsSource="{Binding DataBase}"
                         SelectedItem="{Binding SelectDataBase}">
                         <Picker.Items>
@@ -47,7 +47,7 @@
                     IsVisible="{Binding IsVisibleFrameUrlProyect}">
                     <Entry
                         Keyboard="Text"
-                        Placeholder="URL Proyect"
+                        Placeholder="{Binding PlaceholderUrl}"
                         Text="{Binding UrlProyect}" />
                 </Frame>
 
@@ -60,7 +60,7 @@
                     IsVisible="{Binding IsVisibleFrameUrlKeyProyect}">
                     <Entry
                         Keyboard="Text"
-                        Placeholder="Key Proyect"
+                        Placeholder="{Binding PlaceholderKey}"
                         Text="{Binding KeyProyect}" />
                 </Frame>
 
@@ -77,7 +77,7 @@
                         HorizontalOptions="Center">
                         <Entry
                             Keyboard="Numeric"
-                            Placeholder="Code"
+                            Placeholder="{Binding EntryCode}"
                             Text="{Binding CodeAdmin}"
                             WidthRequest="100" />
                     </Frame>
@@ -95,7 +95,7 @@
                         Command="{Binding btnSaveConfig}"
                         CornerRadius="5"
                         IsEnabled="{Binding BtnSaveConfig}"
-                        Text="Guardar"
+                        Text="{Binding TextBtnSave}"
                         TextColor="White" />
 
                     <Button
