@@ -46,9 +46,11 @@ namespace Tu_Deuda.ViewModel
 
         private ObservableCollection<MClient> _list_client;
 
+        private static string _labelDate;
+        private static string _labelHour;
         private static string _hour = DateTime.Now.ToString("HH:mm");
         private static string _date = DateTime.Now.ToString("dd/MM/yyyy");
-        private string _dateNow = "Fecha" + ": " + _date + "- " + "Hora" + ": " + _hour;
+        private string _dateNow = $"Fecha: {_date} - Hora: {_hour} ";
         private string _nameClient;
         private float _saldoInicial;
         private string _descripcionClient;
@@ -136,8 +138,6 @@ namespace Tu_Deuda.ViewModel
         public string _addClientLabel;
         public string _searchClientLabel;
         public string _credit;
-        private string hour_;
-        private string fecha_;
 
         // DATABASE CONFIG
         private static string fetchData;
@@ -239,14 +239,14 @@ namespace Tu_Deuda.ViewModel
 
         public string LabelDate
         {
-            get { return fecha_; }
-            set { SetValue(ref fecha_, value); }
+            get => _labelDate;
+            set => _labelDate = value;
         }
 
         public string LabelHour
         {
-            get { return hour_; }
-            set { SetValue(ref hour_, value); }
+            get { return _labelHour; }
+            set { SetValue(ref _labelHour, value); }
         }
 
         #endregion Language
@@ -320,14 +320,26 @@ namespace Tu_Deuda.ViewModel
             {
                 var newClient = new MClient { Name = TextName.ToUpper().Trim(), Saldo_Inicial = TextValor, Description = TextDescription, Status = _status, Fecha = _dateNow, Imagen = _imageClient };
 
-                _dbContext.Add(newClient);
-
-                await _dbContext.SaveChangesAsync();
-
-                await AlertShow();
-                await Load_Data();
-
-                ResetField();
+                if (newClient.Name.Length > 15)
+                {
+                    if (Language == "EN")
+                    {
+                        await Alerts.ShowAlert("info", "maximum 15 letters or 2 words", "Ok");
+                    }
+                    else
+                    {
+                        await Alerts.ShowAlert("info", "maximo 15 letras o 2 palabras", "Ok");
+                    }
+                    return;
+                }
+                else
+                {
+                    _dbContext.Add(newClient);
+                    await _dbContext.SaveChangesAsync();
+                    await AlertShow();
+                    await Load_Data();
+                    ResetField();
+                }
             }
         }
 
@@ -610,13 +622,13 @@ namespace Tu_Deuda.ViewModel
                                 .Where(u => u.Name.StartsWith(TextSeaching.ToUpper().Trim()))
                                 .ToListAsync();
 
-            if (searchingOneClient == null)
+            if (searchingOneClient.Count > 0)
             {
-                await AlertNoResult();
+                List_Client = new ObservableCollection<MClient>(searchingOneClient);
             }
             else
             {
-                List_Client = new ObservableCollection<MClient>(searchingOneClient);
+                await AlertNoResult();
             }
         }
 
@@ -791,6 +803,8 @@ namespace Tu_Deuda.ViewModel
                 AddClientLabel = LanguageApp._add_clientTextEN;
                 SearchClient = LanguageApp._seach_ClientTextEN;
                 Flag = ImageSource.FromFile("flag_ES.png");
+                LabelDate = LanguageApp._dateTextEN;
+                LabelHour = LanguageApp._hourTextEN;
             }
             else
             {
@@ -803,6 +817,8 @@ namespace Tu_Deuda.ViewModel
                 AddClientLabel = LanguageApp._add_clientTextES;
                 SearchClient = LanguageApp._seach_ClientTextES;
                 Flag = ImageSource.FromFile("flag_EN.png");
+                LabelDate = LanguageApp._dateTextES;
+                LabelHour = LanguageApp._hourTextES;
             }
         }
 

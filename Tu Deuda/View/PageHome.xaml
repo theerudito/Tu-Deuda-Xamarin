@@ -132,6 +132,9 @@
                                             CornerRadius="10"
                                             HeightRequest="20"
                                             WidthRequest="20">
+                                            <Frame.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={x:Reference List}, Path=BindingContext.btn_goDetail}" CommandParameter="{Binding}" />
+                                            </Frame.GestureRecognizers>
                                             <StackLayout>
                                                 <Image
                                                     Grid.Row="0"
@@ -140,7 +143,6 @@
                                                     HeightRequest="40"
                                                     Source="add_Client.png"
                                                     WidthRequest="40" />
-
                                                 <Grid ColumnDefinitions="*,*" RowDefinitions="*,*">
                                                     <Label
                                                         Grid.Row="0"

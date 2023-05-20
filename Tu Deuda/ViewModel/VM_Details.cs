@@ -24,14 +24,8 @@ namespace Tu_Deuda.ViewModel
         {
             LanguageUI = LocalStorange.GetStorange("language");
 
-            if (LanguageUI == "EN")
-            {
-                LoadLanguage();
-            }
-            else
-            {
-                LoadLanguage();
-            }
+            if (LanguageUI == "EN") LoadLanguage();
+            LoadLanguage();
 
             receivedClient = client;
             Navigation = navigation;
@@ -53,7 +47,7 @@ namespace Tu_Deuda.ViewModel
 
         private static string _hour = DateTime.Now.ToString("HH:mm");
         private static string _date = DateTime.Now.ToString("dd/MM/yyyy");
-        private string _dateNow = $"Fecha: {_date} - Hora: {_hour} ";
+        private string _dateNow = $"{_date} - {_hour}";
 
         private string _name;
         private float _deuda;
@@ -63,8 +57,8 @@ namespace Tu_Deuda.ViewModel
         private string _credito = "CREDITO";
         private string _debito = "DEBITO";
         private string _type;
-        private string _fecha;
         private string _color;
+
 
         public string TextName
         {
@@ -120,10 +114,10 @@ namespace Tu_Deuda.ViewModel
 
         public string TextDate
         {
-            get { return _fecha; }
+            get { return _dateNow; }
             set
             {
-                SetValue(ref _fecha, value);
+                SetValue(ref _dateNow, value);
                 OnPropertyChanged();
             }
         }
@@ -200,7 +194,8 @@ namespace Tu_Deuda.ViewModel
         private string _labelResultFinal;
         private string _labelName;
         private string _labelDescription;
-        private string _labelDate;
+        private static string _labelDate;
+        private static string _labelHour;
         private string _labelType;
         private string _labelCredit;
         private string _labelDebit;
@@ -270,13 +265,21 @@ namespace Tu_Deuda.ViewModel
             }
         }
 
+        public string LabelHour
+        {
+            get { return _labelHour; }
+            set
+            {
+                SetValue(ref _labelHour, value);
+            }
+        }
+
         public string LabelDate
         {
             get { return _labelDate; }
             set
             {
                 SetValue(ref _labelDate, value);
-                OnPropertyChanged();
             }
         }
 
@@ -380,6 +383,8 @@ namespace Tu_Deuda.ViewModel
                 PlaceholderDescription = LanguageApp._descriptionPlaceholderEN;
                 PlaceholderValue = LanguageApp._valueEN;
                 PickerInfor = LanguageApp._delectPickerEN;
+                LabelHour = LanguageApp._hourTextEN;
+                LabelDate = LanguageApp._dateTextEN;
             }
             else
             {
@@ -397,6 +402,8 @@ namespace Tu_Deuda.ViewModel
                 PlaceholderDescription = LanguageApp._descriptionPlaceholderES;
                 PlaceholderValue = LanguageApp._valueES;
                 PickerInfor = LanguageApp._delectPickerES;
+                LabelHour = LanguageApp._hourTextES;
+                LabelDate = LanguageApp._dateTextES;
             }
         }
 
@@ -659,7 +666,6 @@ namespace Tu_Deuda.ViewModel
 
         public async Task Delete_Credito()
         {
-
             if (LanguageUI == "EN" ? await DisplayAlert("Alert", "Are you sure you want to delete this credit?", "Yes", "No") :
                 await DisplayAlert("Alerta", "¿Estas seguro de eliminar este credito?", "Si", "No"))
             {
@@ -758,8 +764,6 @@ namespace Tu_Deuda.ViewModel
                 await AlertError();
             }
         }
-
-
 
         public async Task AlertPaymend()
         {

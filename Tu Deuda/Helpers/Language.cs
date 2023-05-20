@@ -4,13 +4,13 @@
     {
         // PAGE HOME
         public static readonly string _nameTextEN = "Name";
-
         public static readonly string _dateTextEN = "Date";
         public static readonly string _hourTextEN = "Hour";
         public static readonly string _valueTextEN = "Value";
         public static readonly string _descriptionTextEN = "Description";
         public static readonly string _add_clientTextEN = "Add Client";
         public static readonly string _seach_ClientTextEN = "Search Client";
+
         public static readonly string _nameTextES = "Nombre";
         public static readonly string _dateTextES = "Fecha";
         public static readonly string _hourTextES = "Hora";
@@ -22,7 +22,6 @@
 
         // PAGE DETAILS
         public static readonly string _valuePreviousEN = "Value Before";
-
         public static readonly string _valueCurrentEN = "Value Current:";
         public static readonly string _resultFinalLabelEN = "RESULT FINAL";
         public static readonly string _descriptionPlaceholderEN = "Enter a new Description";
@@ -54,7 +53,6 @@
 
         // PAGE ADD CONFIG
         public static readonly string _entryUrlProyectEN = "Url Proyect";
-
         public static readonly string _entryKeyProyectEN = "Key Poryect";
         public static readonly string _selectDataBaseEN = "SELECT DATABASE";
         public static readonly string _entryCodePlaceholderEN = "Code";
