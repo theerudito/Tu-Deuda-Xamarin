@@ -45,6 +45,5 @@
 
   <ItemGroup>
     <Folder Include="apk\" />
-    <Folder Include="DTO\" />
   </ItemGroup>
 </Project>
