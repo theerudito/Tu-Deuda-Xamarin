@@ -747,12 +747,9 @@ namespace Tu_Deuda.ViewModel
 
         public async Task OpenConfiguration()
         {
-            var internet = ValidationInternet.IsConnected();
-
-            if (internet)
+            if (ValidationInternet.IsConnected() == true)
             {
                 ShowIntertical();
-
                 if (CrossMTAdmob.Current.IsInterstitialLoaded())
                 {
                     CrossMTAdmob.Current.ShowInterstitial();
@@ -761,14 +758,17 @@ namespace Tu_Deuda.ViewModel
                 else
                 {
                     if (Language == "EN")
+                    {
                         await Alerts.ShowAlert("Alert", "The ad is not ready yet", "Ok");
-                    await Alerts.ShowAlert("Alert", "El anuncio aún no está listo", "Ok");
+                    }
+                    else
+                    {
+                        await Alerts.ShowAlert("Alert", "El anuncio aún no está listo", "Ok");
+                    }
                 }
             }
             else
             {
-                if (Language == "EN")
-                    await Navigation.PushAsync(new Config());
                 await Navigation.PushAsync(new Config());
             }
         }
