@@ -50,7 +50,7 @@ namespace Tu_Deuda.ViewModel
         private static string _labelHour;
         private static string _hour = DateTime.Now.ToString("HH:mm");
         private static string _date = DateTime.Now.ToString("dd/MM/yyyy");
-        private string _dateNow = $"{_date}-{_hour}";
+        private string _dateNow = $"{_date}";
         private string _nameClient;
         private float _saldoInicial;
         private string _descripcionClient;
