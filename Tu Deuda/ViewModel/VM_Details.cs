@@ -11,6 +11,7 @@ using Tu_Deuda.ApplicationDB;
 using Tu_Deuda.Data;
 using Tu_Deuda.Helpers;
 using Tu_Deuda.Model;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Tu_Deuda.ViewModel
@@ -58,7 +59,6 @@ namespace Tu_Deuda.ViewModel
         private string _debito = "DEBITO";
         private string _type;
         private string _color;
-
 
         public string TextName
         {
@@ -789,11 +789,21 @@ namespace Tu_Deuda.ViewModel
             }
         }
 
+        public async Task OpenUrl(string url)
+        {
+            await Browser.OpenAsync(url);
+        }
+
         #region COMMANDS
 
         public ICommand btnDelete => new Command(async () => await Delete_Credito());
         public ICommand btngoHome => new Command(async () => await Back_Home());
         public ICommand btnSave_Data => new Command(async () => await SaveData());
+
+        public ICommand btnInstagram => new Command(async () => await OpenUrl("https://www.instagram.com/theerudito/"));
+        public ICommand btnGithub => new Command(async () => await OpenUrl("https://github.com/theerudito?tab=repositories"));
+        public ICommand btnThreads => new Command(async () => await OpenUrl("https://www.threads.net/@theerudito"));
+        public ICommand btnLinkedin => new Command(async () => await OpenUrl("https://www.linkedin.com/in/theerudito/"));
 
         #endregion COMMANDS
     }

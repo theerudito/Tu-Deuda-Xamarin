@@ -50,7 +50,7 @@ namespace Tu_Deuda.ViewModel
         private static string _labelHour;
         private static string _hour = DateTime.Now.ToString("HH:mm");
         private static string _date = DateTime.Now.ToString("dd/MM/yyyy");
-        private string _dateNow = $"Fecha: {_date} - Hora: {_hour} ";
+        private string _dateNow = $"{_date}-{_hour}";
         private string _nameClient;
         private float _saldoInicial;
         private string _descripcionClient;
@@ -138,6 +138,10 @@ namespace Tu_Deuda.ViewModel
         public string _addClientLabel;
         public string _searchClientLabel;
         public string _credit;
+        private string _labelHeaderName;
+        private string _labelHeaderValue;
+        private string _labelHeaderDate;
+        private string _labelHeaderAction;
 
         // DATABASE CONFIG
         private static string fetchData;
@@ -247,6 +251,46 @@ namespace Tu_Deuda.ViewModel
         {
             get { return _labelHour; }
             set { SetValue(ref _labelHour, value); }
+        }
+
+        public string LabelHeaderName
+        {
+            get { return _labelHeaderName; }
+            set
+            {
+                SetValue(ref _labelHeaderName, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string LabelHeaderValue
+        {
+            get { return _labelHeaderValue; }
+            set
+            {
+                SetValue(ref _labelHeaderValue, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string LabelHeaderDate
+        {
+            get { return _labelHeaderDate; }
+            set
+            {
+                SetValue(ref _labelHeaderDate, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string LabelHeaderAction
+        {
+            get { return _labelHeaderAction; }
+            set
+            {
+                SetValue(ref _labelHeaderAction, value);
+                OnPropertyChanged();
+            }
         }
 
         #endregion Language
@@ -794,6 +838,10 @@ namespace Tu_Deuda.ViewModel
             Language = LocalStorange.GetStorange("language");
             if (Language == "EN")
             {
+                LabelHeaderName = LanguageApp._labelHeaderNameEN;
+                LabelHeaderValue = LanguageApp._labelHeaderValueEN;
+                LabelHeaderDate = LanguageApp._labelHeaderDateEN;
+                LabelHeaderAction = LanguageApp._labelHeaderActionEN;
                 NameLabel = LanguageApp._nameTextEN;
                 ValueLabel = LanguageApp._valueTextEN;
                 Credit = "Deuda:";
@@ -808,6 +856,10 @@ namespace Tu_Deuda.ViewModel
             }
             else
             {
+                LabelHeaderName = LanguageApp._labelHeaderNameES;
+                LabelHeaderValue = LanguageApp._labelHeaderValueES;
+                LabelHeaderDate = LanguageApp._labelHeaderDateES;
+                LabelHeaderAction = LanguageApp._labelHeaderActionES;
                 NameLabel = LanguageApp._nameTextES;
                 ValueLabel = LanguageApp._valueTextES;
                 Credit = "Deuda:";

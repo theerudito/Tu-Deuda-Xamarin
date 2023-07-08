@@ -11,7 +11,7 @@
                     <ImageButton
                         Grid.Row="0"
                         Grid.Column="0"
-                        Margin="10,0,0,0"
+                        Margin="10,5,0,0"
                         BackgroundColor="Transparent"
                         Command="{Binding btngoHome}"
                         HeightRequest="20"
@@ -20,7 +20,7 @@
                     <ImageButton
                         Grid.Row="0"
                         Grid.Column="2"
-                        Margin="-10,0,0,0"
+                        Margin="-10,5,0,0"
                         Aspect="AspectFit"
                         BackgroundColor="Transparent"
                         Command="{Binding btnDelete}"
@@ -29,7 +29,7 @@
                         WidthRequest="20" />
                 </Grid>
             </StackLayout>
-            <Grid ColumnDefinitions="*" RowDefinitions="80,20,20,50,50,*,50,*,50">
+            <Grid ColumnDefinitions="*" RowDefinitions="80,20,20,50,50,*,50,*,60,40">
                 <StackLayout Grid.Row="0" Grid.Column="0">
                     <Image
                         HeightRequest="80"
@@ -227,6 +227,48 @@
                         CornerRadius="5"
                         Text="{Binding TextBtnSave}"
                         TextColor="White" />
+                </StackLayout>
+
+                <StackLayout
+                    Grid.Row="9"
+                    Grid.Column="0"
+                    Margin="-15"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                    <Label
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                        Text="FOLLOW ME" />
+                    <StackLayout Orientation="Horizontal">
+                        <ImageButton
+                            Margin="20,0,20,0"
+                            BackgroundColor="Transparent"
+                            Command="{Binding btnInstagram}"
+                            HeightRequest="20"
+                            Source="instagram.png"
+                            WidthRequest="20" />
+                        <ImageButton
+                            Margin="20,0,20,0"
+                            BackgroundColor="Transparent"
+                            Command="{Binding btnGithub}"
+                            HeightRequest="20"
+                            Source="github.png"
+                            WidthRequest="20" />
+                        <ImageButton
+                            Margin="20,0,20,0"
+                            BackgroundColor="Transparent"
+                            Command="{Binding btnThreads}"
+                            HeightRequest="20"
+                            Source="threads_dark.png"
+                            WidthRequest="20" />
+                        <ImageButton
+                            Margin="20,0,20,0"
+                            BackgroundColor="Transparent"
+                            Command="{Binding btnLinkedin}"
+                            HeightRequest="20"
+                            Source="linkedin.png"
+                            WidthRequest="20" />
+                    </StackLayout>
                 </StackLayout>
             </Grid>
             <StackLayout>

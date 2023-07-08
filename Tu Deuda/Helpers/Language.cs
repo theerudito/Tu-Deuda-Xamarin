@@ -34,6 +34,11 @@
         public static readonly string _valueEN = "Enter a Value";
         public static readonly string _labelDescriptionEN = "DESCRIPTION";
         public static readonly string _labelNameEN = "NAME";
+        public static readonly string _labelHeaderNameEN = "NAME";
+        public static readonly string _labelHeaderValueEN = "VALUE";
+        public static readonly string _labelHeaderDateEN = "DATE";
+        public static readonly string _labelHeaderActionEN = "ACTION";
+
 
         public static readonly string _valuePreviousES = "Valor Anterior:";
         public static readonly string _valueCurrentES = "Valor Actual:";
@@ -48,6 +53,10 @@
         public static readonly string _valueES = "Ingrese un Valor";
         public static readonly string _labelDescriptionES = "DESCRIPCION";
         public static readonly string _labelNameES = "NOMBRE";
+        public static readonly string _labelHeaderNameES = "NOMBRE";
+        public static readonly string _labelHeaderValueES = "VALOR";
+        public static readonly string _labelHeaderDateES = "FECHA";
+        public static readonly string _labelHeaderActionES = "ACCION";
 
         // PAGE DETAILS
 
