@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Plugin.FirebasePushNotification;
 using Plugin.Multilingual;
 using System;
 using Tu_Deuda.ApplicationDB;
@@ -26,14 +25,8 @@ namespace Tu_Deuda
             InitializeComponent();
             MainPage = new NavigationPage(new PageHome());
 
-            CrossFirebasePushNotification.Current.Subscribe("all");
-            CrossFirebasePushNotification.Current.OnTokenRefresh += Current_OnTokenRefresh;
         }
 
-        private void Current_OnTokenRefresh(object source, FirebasePushNotificationTokenEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine($"Token: {e.Token}");
-        }
 
         public void getLanguage()
         {

@@ -1,11 +1,8 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.Gms.Ads;
-using Android.Gms.Common;
 using Android.OS;
 using Android.Runtime;
-using Plugin.FirebasePushNotification;
-using Xamarin.Essentials;
 
 namespace Tu_Deuda.Droid
 {
@@ -14,13 +11,16 @@ namespace Tu_Deuda.Droid
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            TabLayoutResource = Resource.Layout.Tabbar;
+            ToolbarResource = Resource.Layout.Toolbar;
+
+
             base.OnCreate(savedInstanceState);
 
             MobileAds.Initialize(ApplicationContext);
 
-            FirebasePushNotificationManager.ProcessIntent(this, Intent);
-
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            Xamarin.Forms.Forms.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
         }
@@ -30,13 +30,6 @@ namespace Tu_Deuda.Droid
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-
-        public void IsPlayServicesAvailable()
-        {
-            int resultCode = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(this);
-            bool isGooglePlayServce = resultCode != ConnectionResult.Success;
-            Preferences.Set("isGooglePlayServce", isGooglePlayServce);
         }
     }
 }
