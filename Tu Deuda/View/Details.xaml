@@ -238,7 +238,7 @@
                     <Label
                         FontAttributes="Bold"
                         HorizontalOptions="Center"
-                        Text="FOLLOW ME" />
+                        Text="{Binding Follow}" />
                     <StackLayout Orientation="Horizontal">
                         <ImageButton
                             Margin="20,0,20,0"

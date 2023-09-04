@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MarcTron.Plugin;
+using Microsoft.EntityFrameworkCore;
 using Plugin.Multilingual;
 using System;
 using Tu_Deuda.ApplicationDB;
@@ -12,6 +13,8 @@ namespace Tu_Deuda
     {
         public App()
         {
+            MyAds.ShowRewardedVideo();
+
             getLanguage();
 
             var _dbCcontext = new Application_Context();
@@ -23,6 +26,12 @@ namespace Tu_Deuda
             DataApp.DefaultCode();
 
             InitializeComponent();
+
+            CrossMTAdmob.Current.OnRewardedVideoAdLoaded += (s, args) =>
+            {
+                CrossMTAdmob.Current.ShowRewardedVideo();
+            };
+
             MainPage = new NavigationPage(new PageHome());
 
         }

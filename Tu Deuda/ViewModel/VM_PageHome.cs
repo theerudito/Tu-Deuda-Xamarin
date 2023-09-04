@@ -1,6 +1,5 @@
 ﻿using Firebase.Database;
 using Firebase.Database.Query;
-using MarcTron.Plugin;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Supabase;
@@ -793,10 +792,9 @@ namespace Tu_Deuda.ViewModel
         {
             if (ValidationInternet.IsConnected() == true)
             {
-                ShowIntertical();
-                if (CrossMTAdmob.Current.IsInterstitialLoaded())
+                MyAds.ShowIntertiscal();
+                if (MyAds.IsIntertiscalLoaded() == true)
                 {
-                    CrossMTAdmob.Current.ShowInterstitial();
                     await Navigation.PushAsync(new Config());
                 }
                 else
@@ -874,18 +872,7 @@ namespace Tu_Deuda.ViewModel
             }
         }
 
-        public void ShowIntertical()
-        {
-            var interticalID = "ca-app-pub-7633493507240683/8015778047";
 
-            CrossMTAdmob.Current.LoadInterstitial(interticalID);
-        }
-
-        public void ShowVideoIntersical()
-        {
-            var interticalVideoID = "ca-app-pub-7633493507240683/8015778047";
-            CrossMTAdmob.Current.LoadRewardedVideo(interticalVideoID);
-        }
 
         #endregion METHOD
 

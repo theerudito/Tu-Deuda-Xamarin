@@ -38,6 +38,7 @@
         public static readonly string _labelHeaderValueEN = "VALUE";
         public static readonly string _labelHeaderDateEN = "DATE";
         public static readonly string _labelHeaderActionEN = "ACTION";
+        public static readonly string _followEN = "FOLLOW US";
 
 
         public static readonly string _valuePreviousES = "Valor Anterior:";
@@ -57,6 +58,7 @@
         public static readonly string _labelHeaderValueES = "VALOR";
         public static readonly string _labelHeaderDateES = "FECHA";
         public static readonly string _labelHeaderActionES = "ACCION";
+        public static readonly string _followES = "SIGUENOS";
 
         // PAGE DETAILS
 

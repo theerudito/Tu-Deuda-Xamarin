@@ -59,6 +59,7 @@ namespace Tu_Deuda.ViewModel
         private string _debito = "DEBITO";
         private string _type;
         private string _color;
+        private string _follow;
 
         public string TextName
         {
@@ -146,6 +147,12 @@ namespace Tu_Deuda.ViewModel
         {
             get { return _color; }
             set { SetValue(ref _color, value); }
+        }
+
+        public string Follow
+        {
+            get { return _follow; }
+            set { SetValue(ref _follow, value); }
         }
 
         // DATABASE CONFIG
@@ -385,6 +392,7 @@ namespace Tu_Deuda.ViewModel
                 PickerInfor = LanguageApp._delectPickerEN;
                 LabelHour = LanguageApp._hourTextEN;
                 LabelDate = LanguageApp._dateTextEN;
+                Follow = LanguageApp._followEN;
             }
             else
             {
@@ -404,6 +412,7 @@ namespace Tu_Deuda.ViewModel
                 PickerInfor = LanguageApp._delectPickerES;
                 LabelHour = LanguageApp._hourTextES;
                 LabelDate = LanguageApp._dateTextES;
+                Follow = LanguageApp._followES;
             }
         }
 
