@@ -14,7 +14,7 @@ namespace Tu_Deuda
     {
         public App()
         {
-            //MyAds.ShowRewardedVideo();
+            MyAds.ShowRewardedVideo();
 
             getLanguage();
 

@@ -13,7 +13,7 @@ namespace Tu_Deuda.Helpers
 
         public static bool IsIntertiscalLoaded()
         {
-            return CrossMTAdmob.Current.IsInterstitialLoaded();
+            return CrossMTAdmob.Current.IsInterstitialLoaded() ? true : false;
         }
 
         public static void ShowRewardedVideo()
