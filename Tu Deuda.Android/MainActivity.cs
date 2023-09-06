@@ -3,6 +3,7 @@ using Android.Content.PM;
 using Android.Gms.Ads;
 using Android.OS;
 using Android.Runtime;
+using Plugin.FirebasePushNotification;
 
 namespace Tu_Deuda.Droid
 {
@@ -19,8 +20,9 @@ namespace Tu_Deuda.Droid
 
             MobileAds.Initialize(ApplicationContext);
 
+            FirebasePushNotificationManager.ProcessIntent(this, Intent);
+
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            Xamarin.Forms.Forms.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
         }

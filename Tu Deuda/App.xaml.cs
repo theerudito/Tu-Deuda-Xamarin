@@ -1,5 +1,6 @@
 ﻿using MarcTron.Plugin;
 using Microsoft.EntityFrameworkCore;
+using Plugin.FirebasePushNotification;
 using Plugin.Multilingual;
 using System;
 using Tu_Deuda.ApplicationDB;
@@ -13,7 +14,7 @@ namespace Tu_Deuda
     {
         public App()
         {
-            MyAds.ShowRewardedVideo();
+            //MyAds.ShowRewardedVideo();
 
             getLanguage();
 
@@ -32,8 +33,26 @@ namespace Tu_Deuda
                 CrossMTAdmob.Current.ShowRewardedVideo();
             };
 
-            MainPage = new NavigationPage(new PageHome());
+            CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>
+            {
+                System.Diagnostics.Debug.WriteLine($"TOKEN : {p.Token}");
+            };
+            // Push message received event
+            CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
+            {
+                System.Diagnostics.Debug.WriteLine("Received");
+            };
+            //Push message received event
+            CrossFirebasePushNotification.Current.OnNotificationOpened += (s, p) =>
+            {
+                System.Diagnostics.Debug.WriteLine("Opened");
+                foreach (var data in p.Data)
+                {
+                    System.Diagnostics.Debug.WriteLine($"{data.Key} : {data.Value}");
+                }
+            };
 
+            MainPage = new NavigationPage(new PageHome());
         }
 
 

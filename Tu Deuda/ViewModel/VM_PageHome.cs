@@ -790,29 +790,31 @@ namespace Tu_Deuda.ViewModel
 
         public async Task OpenConfiguration()
         {
-            if (ValidationInternet.IsConnected() == true)
-            {
-                MyAds.ShowIntertiscal();
-                if (MyAds.IsIntertiscalLoaded() == true)
-                {
-                    await Navigation.PushAsync(new Config());
-                }
-                else
-                {
-                    if (Language == "EN")
-                    {
-                        await Alerts.ShowAlert("Alert", "The ad is not ready yet", "Ok");
-                    }
-                    else
-                    {
-                        await Alerts.ShowAlert("Alert", "El anuncio aún no está listo", "Ok");
-                    }
-                }
-            }
-            else
-            {
-                await Navigation.PushAsync(new Config());
-            }
+            await Navigation.PushAsync(new Config());
+
+            //if (ValidationInternet.IsConnected() == true)
+            //{
+            //    MyAds.ShowIntertiscal();
+            //    if (MyAds.IsIntertiscalLoaded() == true)
+            //    {
+            //        await Navigation.PushAsync(new Config());
+            //    }
+            //    else
+            //    {
+            //        if (Language == "EN")
+            //        {
+            //            await Alerts.ShowAlert("Alert", "The ad is not ready yet", "Ok");
+            //        }
+            //        else
+            //        {
+            //            await Alerts.ShowAlert("Alert", "El anuncio aún no está listo", "Ok");
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    await Navigation.PushAsync(new Config());
+            //}
         }
 
         public void Change_Language()
