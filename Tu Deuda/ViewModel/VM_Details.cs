@@ -36,6 +36,17 @@ namespace Tu_Deuda.ViewModel
             Load_Data();
 
             Color = "Black";
+
+
+            var theme = Application.Current.RequestedTheme;
+            if (theme == OSAppTheme.Dark)
+            {
+                ImageThread = ImageSource.FromFile("threads_light.png");
+            }
+            else
+            {
+                ImageThread = ImageSource.FromFile("threads_dark.png");
+            }
         }
 
         public void CambioColor()
@@ -60,6 +71,13 @@ namespace Tu_Deuda.ViewModel
         private string _type;
         private string _color;
         private string _follow;
+        private ImageSource _imageThread;
+
+        public ImageSource ImageThread
+        {
+            get => _imageThread;
+            set => _imageThread = value;
+        }
 
         public string TextName
         {

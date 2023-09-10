@@ -34,7 +34,7 @@
                     <Image
                         HeightRequest="80"
                         Source="add_client.png"
-                        WidthRequest="80" />
+                        WidthRequest="70" />
                 </StackLayout>
 
                 <StackLayout
@@ -149,7 +149,9 @@
                                 Margin="0,-15,0,0"
                                 Keyboard="Text"
                                 Placeholder="{Binding PlaceholderDescription}"
-                                Text="{Binding TextDescription}" />
+                                PlaceholderColor="silver"
+                                Text="{Binding TextDescription}"
+                                TextColor="Black" />
                         </Frame>
                     </Grid>
                 </StackLayout>
@@ -177,7 +179,9 @@
                                 Margin="0,-20,0,0"
                                 Keyboard="Numeric"
                                 Placeholder="{Binding PlaceholderValue}"
-                                Text="{Binding TextAbono}" />
+                                PlaceholderColor="silver"
+                                Text="{Binding TextAbono}"
+                                TextColor="Black" />
                         </Frame>
                     </Grid>
                 </StackLayout>
@@ -209,7 +213,7 @@
                                 HorizontalOptions="Center"
                                 ItemsSource="{Binding SelectType}"
                                 SelectedItem="{Binding SelectType}"
-                                TextColor="Black">
+                                TitleColor="silver">
                                 <Picker.Items>
                                     <x:String>CREDITO</x:String>
                                     <x:String>DEBITO</x:String>
@@ -259,7 +263,7 @@
                             BackgroundColor="Transparent"
                             Command="{Binding btnThreads}"
                             HeightRequest="20"
-                            Source="threads_dark.png"
+                            Source="{Binding ImageThread}"
                             WidthRequest="20" />
                         <ImageButton
                             Margin="20,0,20,0"

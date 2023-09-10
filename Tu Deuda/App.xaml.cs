@@ -1,5 +1,4 @@
-﻿using MarcTron.Plugin;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Plugin.FirebasePushNotification;
 using Plugin.Multilingual;
 using System;
@@ -14,7 +13,7 @@ namespace Tu_Deuda
     {
         public App()
         {
-            MyAds.ShowRewardedVideo();
+            MyAds.ShowIntertiscal();
 
             getLanguage();
 
@@ -27,11 +26,6 @@ namespace Tu_Deuda
             DataApp.DefaultCode();
 
             InitializeComponent();
-
-            CrossMTAdmob.Current.OnRewardedVideoAdLoaded += (s, args) =>
-            {
-                CrossMTAdmob.Current.ShowRewardedVideo();
-            };
 
             CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>
             {

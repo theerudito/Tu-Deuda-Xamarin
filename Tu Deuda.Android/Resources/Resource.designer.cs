@@ -20572,16 +20572,19 @@ namespace Tu_Deuda.Droid
 			public const int threads_dark = 2131165366;
 			
 			// aapt resource value: 0x7F0700B7
-			public const int tooltip_frame_dark = 2131165367;
+			public const int threads_light = 2131165367;
 			
 			// aapt resource value: 0x7F0700B8
-			public const int tooltip_frame_light = 2131165368;
+			public const int tooltip_frame_dark = 2131165368;
 			
 			// aapt resource value: 0x7F0700B9
-			public const int update = 2131165369;
+			public const int tooltip_frame_light = 2131165369;
 			
 			// aapt resource value: 0x7F0700BA
-			public const int web = 2131165370;
+			public const int update = 2131165370;
+			
+			// aapt resource value: 0x7F0700BB
+			public const int web = 2131165371;
 			
 			static Drawable()
 			{

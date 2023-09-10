@@ -9,6 +9,11 @@ namespace Tu_Deuda.Helpers
             var idIntersticial = "ca-app-pub-7633493507240683/8015778047";
 
             CrossMTAdmob.Current.LoadInterstitial(idIntersticial);
+
+            CrossMTAdmob.Current.OnInterstitialLoaded += (sender, args) =>
+            {
+                CrossMTAdmob.Current.ShowInterstitial();
+            };
         }
 
         public static bool IsIntertiscalLoaded()

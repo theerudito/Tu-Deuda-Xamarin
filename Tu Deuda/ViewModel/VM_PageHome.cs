@@ -1,6 +1,5 @@
 ﻿using Firebase.Database;
 using Firebase.Database.Query;
-using MarcTron.Plugin;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Supabase;
@@ -793,27 +792,28 @@ namespace Tu_Deuda.ViewModel
         {
             if (ValidationInternet.IsConnected() == true)
             {
-                MyAds.ShowIntertiscal();
-                if (MyAds.IsIntertiscalLoaded() == true)
+                if (Language == "EN")
                 {
-                    CrossMTAdmob.Current.ShowInterstitial();
-                    await Navigation.PushAsync(new Config());
+                    var result = await DisplayAlert("WordInEnglish", "Do you want to see an ad to unlock the configuration?", "Yes", "No");
+                    if (result == true)
+                    {
+                        MyAds.ShowIntertiscal();
+                        await Navigation.PushAsync(new Config());
+                    }
                 }
                 else
                 {
-                    if (Language == "EN")
+                    var result = await DisplayAlert("WordInEnglish", "¿Quieres ver un anuncio para desbloquear la configuración?", "SI", "NO");
+                    if (result == true)
                     {
-                        await Alerts.ShowAlert("Alert", "The ad is not ready yet", "Ok");
-                    }
-                    else
-                    {
-                        await Alerts.ShowAlert("Alert", "El anuncio aún no está listo", "Ok");
+                        MyAds.ShowIntertiscal();
                     }
                 }
             }
             else
             {
                 await Navigation.PushAsync(new Config());
+
             }
         }
 

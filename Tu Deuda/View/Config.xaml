@@ -29,7 +29,9 @@
                     <Picker
                         Title="{Binding PickerTitle}"
                         ItemsSource="{Binding DataBase}"
-                        SelectedItem="{Binding SelectDataBase}">
+                        SelectedItem="{Binding SelectDataBase}"
+                        TextColor="Black"
+                        TitleColor="silver">
                         <Picker.Items>
                             <x:String>Web</x:String>
                             <x:String>Sqlite</x:String>
@@ -48,7 +50,9 @@
                     <Entry
                         Keyboard="Text"
                         Placeholder="{Binding PlaceholderUrl}"
-                        Text="{Binding UrlProyect}" />
+                        PlaceholderColor="silver"
+                        Text="{Binding UrlProyect}"
+                        TextColor="Black" />
                 </Frame>
 
                 <Frame
@@ -61,7 +65,9 @@
                     <Entry
                         Keyboard="Text"
                         Placeholder="{Binding PlaceholderKey}"
-                        Text="{Binding KeyProyect}" />
+                        PlaceholderColor="silver"
+                        Text="{Binding KeyProyect}"
+                        TextColor="black" />
                 </Frame>
 
 
@@ -78,7 +84,9 @@
                         <Entry
                             Keyboard="Numeric"
                             Placeholder="{Binding EntryCode}"
+                            PlaceholderColor="silver"
                             Text="{Binding CodeAdmin}"
+                            TextColor="Black"
                             WidthRequest="100" />
                     </Frame>
 
