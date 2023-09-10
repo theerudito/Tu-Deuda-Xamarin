@@ -367,11 +367,11 @@ namespace Tu_Deuda.ViewModel
                 {
                     if (Language == "EN")
                     {
-                        await Alerts.ShowAlert("info", "maximum 15 letters or 2 words", "Ok");
+                        await Alerts.ShowAlert("Alert", "maximum 15 letters or 2 words", "Ok");
                     }
                     else
                     {
-                        await Alerts.ShowAlert("info", "maximo 15 letras o 2 palabras", "Ok");
+                        await Alerts.ShowAlert("Alerta", "maximo 15 letras o 2 palabras", "Ok");
                     }
                     return;
                 }
@@ -794,7 +794,7 @@ namespace Tu_Deuda.ViewModel
             {
                 if (Language == "EN")
                 {
-                    var result = await DisplayAlert("WordInEnglish", "Do you want to see an ad to unlock the configuration?", "Yes", "No");
+                    var result = await DisplayAlert("Alert", "Do you want to see an ad to unlock the configuration?", "Yes", "No");
                     if (result == true)
                     {
                         MyAds.ShowIntertiscal();
@@ -803,7 +803,7 @@ namespace Tu_Deuda.ViewModel
                 }
                 else
                 {
-                    var result = await DisplayAlert("WordInEnglish", "¿Quieres ver un anuncio para desbloquear la configuración?", "SI", "NO");
+                    var result = await DisplayAlert("Alerta", "¿Quieres ver un anuncio para desbloquear la configuración?", "SI", "NO");
                     if (result == true)
                     {
                         MyAds.ShowIntertiscal();
