@@ -807,6 +807,7 @@ namespace Tu_Deuda.ViewModel
                     if (result == true)
                     {
                         MyAds.ShowIntertiscal();
+                        await Navigation.PushAsync(new Config());
                     }
                 }
             }
