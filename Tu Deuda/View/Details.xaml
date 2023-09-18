@@ -213,6 +213,7 @@
                                 HorizontalOptions="Center"
                                 ItemsSource="{Binding SelectType}"
                                 SelectedItem="{Binding SelectType}"
+                                TextColor="Black"
                                 TitleColor="silver">
                                 <Picker.Items>
                                     <x:String>CREDITO</x:String>
