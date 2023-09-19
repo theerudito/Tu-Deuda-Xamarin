@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.IO;
+using Tu_Deuda.Data;
 using Tu_Deuda.Model;
-using Xamarin.Forms;
 
 namespace Tu_Deuda.ApplicationDB
 {
@@ -12,28 +10,12 @@ namespace Tu_Deuda.ApplicationDB
         {
             SQLitePCL.Batteries_V2.Init();
 
-            this.Database.EnsureCreated();
+            Database.EnsureCreated();
         }
-
-        private const string DatabaseName = "YourDeuda.db3";
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            String databasePath;
-            switch (Device.RuntimePlatform)
-            {
-                case Device.iOS:
-                    databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library", DatabaseName);
-                    break;
-
-                case Device.Android:
-                    databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), DatabaseName);
-                    break;
-
-                default:
-                    throw new NotImplementedException("Platform not supported");
-            }
-            optionsBuilder.UseSqlite($"Filename={databasePath}");
+            optionsBuilder.UseSqlite($"Filename={DatabaseConfig.ConnectionString()}");
         }
 
         public DbSet<MClient> Clients { get; set; }

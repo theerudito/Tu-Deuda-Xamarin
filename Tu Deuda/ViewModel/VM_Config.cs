@@ -1,10 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Tu_Deuda.ApplicationDB;
+using Tu_Deuda.Data;
 using Tu_Deuda.Helpers;
+using Tu_Deuda.Service;
 using Xamarin.Forms;
+
+
 
 namespace Tu_Deuda.ViewModel
 {
@@ -280,12 +285,58 @@ namespace Tu_Deuda.ViewModel
             }
         }
 
+
+        public async Task Backup()
+        {
+            string path = DatabaseConfig.ConnectionString();
+
+            var fileService = DependencyService.Get<IFileService>();
+
+            fileService.CopyFile(path, DatabaseConfig.nameDatabase);
+
+            if (Language == "EN")
+            {
+                await Alerts.ShowAlert("info", "Backup Successfully", "ok");
+            }
+            else
+            {
+                await Alerts.ShowAlert("info", "Backup Correcto", "ok");
+            }
+        }
+
+
+        public async Task Restore()
+        {
+            var fileService = DependencyService.Get<IFileService>();
+
+            var data = fileService.GetPath(DatabaseConfig.nameDatabase);
+
+            var _dbCcontext = new Application_Context();
+
+            _dbCcontext.Database.EnsureDeleted();
+
+
+            File.Copy(data, DatabaseConfig.ConnectionString(), true);
+
+
+            if (Language == "EN")
+            {
+                await Alerts.ShowAlert("info", "Restore Successfully", "ok");
+            }
+            else
+            {
+                await Alerts.ShowAlert("info", "Restaurado Correctamente", "ok");
+            }
+        }
+
         #endregion Metthods
 
         #region Commands
 
         public ICommand btnSaveConfig => new Command(async () => await SaveConfig());
         public ICommand btnCodeConfig => new Command(async () => await MyCode());
+        public ICommand btnBackup => new Command(async () => await Backup());
+        public ICommand btnRestore => new Command(async () => await Restore());
 
         #endregion Commands
     }
