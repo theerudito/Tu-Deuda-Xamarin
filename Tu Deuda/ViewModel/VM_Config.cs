@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Tu_Deuda.ApplicationDB;
-using Tu_Deuda.Data;
 using Tu_Deuda.Helpers;
 using Tu_Deuda.Service;
 using Xamarin.Forms;
@@ -288,11 +286,10 @@ namespace Tu_Deuda.ViewModel
 
         public async Task Backup()
         {
-            string path = DatabaseConfig.ConnectionString();
 
             var fileService = DependencyService.Get<IFileService>();
 
-            fileService.CopyFile(path, DatabaseConfig.nameDatabase);
+            fileService.Backup();
 
             if (Language == "EN")
             {
@@ -309,23 +306,29 @@ namespace Tu_Deuda.ViewModel
         {
             var fileService = DependencyService.Get<IFileService>();
 
-            var data = fileService.GetPath(DatabaseConfig.nameDatabase);
+            var data = fileService.Restore();
 
-            var _dbCcontext = new Application_Context();
-
-            _dbCcontext.Database.EnsureDeleted();
-
-
-            File.Copy(data, DatabaseConfig.ConnectionString(), true);
-
-
-            if (Language == "EN")
+            if (data == false)
             {
-                await Alerts.ShowAlert("info", "Restore Successfully", "ok");
+                if (Language == "EN")
+                {
+                    await Alerts.ShowAlert("info", "Backup Not Found", "ok");
+                }
+                else
+                {
+                    await Alerts.ShowAlert("info", "No Existe Una Backup", "ok");
+                }
             }
             else
             {
-                await Alerts.ShowAlert("info", "Restaurado Correctamente", "ok");
+                if (Language == "EN")
+                {
+                    await Alerts.ShowAlert("info", "Restore Successfully", "ok");
+                }
+                else
+                {
+                    await Alerts.ShowAlert("info", "Restaurado Correctamente", "ok");
+                }
             }
         }
 

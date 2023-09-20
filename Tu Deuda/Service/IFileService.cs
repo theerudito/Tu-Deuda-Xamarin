@@ -2,7 +2,7 @@
 {
     public interface IFileService
     {
-        void CopyFile(string sourceFilePath, string fileName);
-        string GetPath(string fileName);
+        void Backup();
+        bool Restore();
     }
 }
