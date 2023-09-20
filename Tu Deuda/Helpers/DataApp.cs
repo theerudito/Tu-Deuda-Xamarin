@@ -59,8 +59,9 @@ namespace Tu_Deuda.Helpers
                 var initialCode = new CodeApp
                 {
                     Id = 1,
-                    CodeAdmin = AdminCode.CodeAdmin(),
+                    CodeAdmin = BcryManager.HashPassword(AppCode.codeAdmin),
                 };
+
                 _dbCcontext.Add(initialCode);
                 _dbCcontext.SaveChangesAsync();
             }

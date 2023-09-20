@@ -13,7 +13,7 @@ namespace Tu_Deuda
     {
         public App()
         {
-            //MyAds.ShowIntertiscal();
+            MyAds.ShowIntertiscal();
 
             getLanguage();
 

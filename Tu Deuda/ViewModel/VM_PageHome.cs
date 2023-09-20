@@ -790,33 +790,33 @@ namespace Tu_Deuda.ViewModel
 
         public async Task OpenConfiguration()
         {
-            await Navigation.PushAsync(new Config());
-            //if (ValidationInternet.IsConnected() == true)
-            //{
-            //    if (Language == "EN")
-            //    {
-            //        var result = await DisplayAlert("Alert", "Do you want to see an ad to unlock the configuration?", "Yes", "No");
-            //        if (result == true)
-            //        {
-            //            MyAds.ShowIntertiscal();
-            //            await Navigation.PushAsync(new Config());
-            //        }
-            //    }
-            //    else
-            //    {
-            //        var result = await DisplayAlert("Alerta", "¿Quieres ver un anuncio para desbloquear la configuración?", "SI", "NO");
-            //        if (result == true)
-            //        {
-            //            MyAds.ShowIntertiscal();
-            //            await Navigation.PushAsync(new Config());
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    await Navigation.PushAsync(new Config());
 
-            //}
+            if (ValidationInternet.IsConnected() == true)
+            {
+                if (Language == "EN")
+                {
+                    var result = await DisplayAlert("Alert", "Do you want to see an ad to unlock the configuration?", "Yes", "No");
+                    if (result == true)
+                    {
+                        MyAds.ShowIntertiscal();
+                        await Navigation.PushAsync(new Config());
+                    }
+                }
+                else
+                {
+                    var result = await DisplayAlert("Alerta", "¿Quieres ver un anuncio para desbloquear la configuración?", "SI", "NO");
+                    if (result == true)
+                    {
+                        MyAds.ShowIntertiscal();
+                        await Navigation.PushAsync(new Config());
+                    }
+                }
+            }
+            else
+            {
+                await Navigation.PushAsync(new Config());
+
+            }
         }
 
         public void Change_Language()

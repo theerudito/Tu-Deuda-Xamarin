@@ -45,7 +45,7 @@ namespace Tu_Deuda.ViewModel
         private bool _isVisibleFrameUrlKeyProyect;
 
         private bool _btnSaveConfig;
-        private int _codeAdmin;
+        private string _codeAdmin;
 
         private string Sqlite = "Sqlite";
         private string Web = "Web";
@@ -107,7 +107,7 @@ namespace Tu_Deuda.ViewModel
             set { SetProperty(ref _btnSaveConfig, value); }
         }
 
-        public int CodeAdmin
+        public string CodeAdmin
         {
             get { return _codeAdmin; }
             set { SetProperty(ref _codeAdmin, value); }
@@ -253,32 +253,46 @@ namespace Tu_Deuda.ViewModel
         {
             var _dbCcontext = new Application_Context();
 
-            var queryCode = await _dbCcontext.Code_App.Where(c => c.CodeAdmin == CodeAdmin).FirstOrDefaultAsync();
+            var queryCode = await _dbCcontext.Code_App.FindAsync(1);
 
-            if (queryCode != null)
+            if (string.IsNullOrEmpty(CodeAdmin))
             {
                 if (Language == "EN")
                 {
-                    await Alerts.ShowAlert("info", "Code Correct", "ok");
-                    BtnSaveConfig = true;
-                    CodeAdmin = 0;
+                    await Alerts.ShowAlert("info", "Enter Code", "ok");
                 }
                 else
                 {
-                    await Alerts.ShowAlert("info", "Codigo Correcto", "ok");
-                    BtnSaveConfig = true;
-                    CodeAdmin = 0;
+                    await Alerts.ShowAlert("info", "Ingrese Codigo", "ok");
                 }
             }
             else
             {
-                if (Language == "EN")
+                if (BcryManager.ValidatePassword(CodeAdmin, queryCode.CodeAdmin) == true)
                 {
-                    await Alerts.ShowAlert("info", "Code Incorrect", "ok");
+                    if (Language == "EN")
+                    {
+                        await Alerts.ShowAlert("info", "Code Correct", "ok");
+                        BtnSaveConfig = true;
+                        CodeAdmin = "0";
+                    }
+                    else
+                    {
+                        await Alerts.ShowAlert("info", "Codigo Correcto", "ok");
+                        BtnSaveConfig = true;
+                        CodeAdmin = "0";
+                    }
                 }
                 else
                 {
-                    await Alerts.ShowAlert("info", "Codigo Incorrecto", "ok");
+                    if (Language == "EN")
+                    {
+                        await Alerts.ShowAlert("info", "Code Incorrect", "ok");
+                    }
+                    else
+                    {
+                        await Alerts.ShowAlert("info", "Codigo Incorrecto", "ok");
+                    }
                 }
             }
         }

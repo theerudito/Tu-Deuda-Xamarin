@@ -6,7 +6,6 @@ namespace Tu_Deuda.Model
     {
         [Key]
         public int Id { get; set; }
-
-        public int CodeAdmin { get; set; }
+        public string CodeAdmin { get; set; }
     }
 }
